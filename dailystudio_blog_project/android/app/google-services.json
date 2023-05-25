@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1001980112726",
+    "project_id": "dailyblogproject-e323c",
+    "storage_bucket": "dailyblogproject-e323c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001980112726:android:a1e6109bf29e3245fa70f7",
+        "android_client_info": {
+          "package_name": "com.example.dailystudio_blog_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001980112726-qt0kplabfkqfc7efmd69v2llkkn6mntt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dailystudio_blog_project",
+            "certificate_hash": "222cd8fa475ea3e9651a0f4a6e001b9f0e78d86f"
+          }
+        },
+        {
+          "client_id": "1001980112726-nf35mr97q5m4ig1dtbdschgnv7hpndhj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8pzRb6x-eUTzqDj5vginELMQHu9WxX8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001980112726-nf35mr97q5m4ig1dtbdschgnv7hpndhj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1001980112726-rpm7mk99vnib6klplq6irbr58j38kbuk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.dailystudioBlogProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
