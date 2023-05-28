@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,6 +14,18 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  Future<bool> _handleSubmitted(
+      String uid, String password) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .where('Userid', isEqualTo: uid)
+        .where('Password', isEqualTo: password)
+        .limit(1)
+        .get();
+
+    return querySnapshot.size == 1;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +43,6 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
             const SizedBox(height: 120.0),
-            // TODO: Remove filled: true values (103)
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(
@@ -47,18 +62,6 @@ class _LoginPageState extends State<LoginPage> {
             OverflowBar(
               alignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                // TODO: Add a beveled rectangular border to CANCEL (103)
-                TextButton(
-                  child: const Text('CANCEL'),
-                  style: TextButton.styleFrom(
-                      primary: Colors.black
-                  ),
-                  onPressed: () {
-                    _usernameController.clear();
-                    _passwordController.clear();
-                  },
-                ),
-
                 TextButton(
                   child: const Text('Sign Up'),
                   style: TextButton.styleFrom(
@@ -68,11 +71,9 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushNamed(context, '/signup');
                   },
                 ),
-                // TODO: Add an elevation to NEXT (103)
-                // TODO: Add a beveled rectangular border to NEXT (103)
                 ElevatedButton(
                   child: const Text(
-                    'NEXT',
+                    'Log in',
                     style: TextStyle(
                         color: Colors.black
                     ),
@@ -81,8 +82,38 @@ class _LoginPageState extends State<LoginPage> {
                       primary: Colors.white60,
                       minimumSize: const Size(80, 34)
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    final uid = _usernameController.text;
+                    final password = _passwordController.text;
+                    var currentUserProvider = Provider.of<CurrentUserModel>(context, listen: false);
+                    var name = CurrentUser(name: uid);
+                    currentUserProvider.adduser(name);
+                    final isMatched = await _handleSubmitted(uid, password);
+                    if (isMatched) {
+                      Navigator.pop(context);
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('알림'),
+                            content: Text('아이디 혹은 비밀번호가 일치하지 않습니다.'),
+                            actions: [
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordController.clear();
+                                    _usernameController.clear();
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
               ],
