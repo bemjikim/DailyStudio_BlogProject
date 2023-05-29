@@ -11,6 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'package:dailystudio_blog_project/archive/add_post.dart';
+import 'package:dailystudio_blog_project/archive/archive_main.dart';
+import 'package:dailystudio_blog_project/archive/archive_month.dart';
 import 'package:flutter/material.dart';
 import '../login/login_page.dart';
 import '../login/sign_up_page.dart';
@@ -29,7 +32,10 @@ class DailyStudioBlog extends StatelessWidget {
         '/login': (BuildContext context) => LoginPage(),
         '/': (BuildContext context) => HomePage(),
         '/signup': (BuildContext context) =>  SignUpPage(),
+        '/addpost' : (BuildContext context) =>  AddPost(),
+        '/main_archive' : (BuildContext context) =>  ArchiveMain(),
       },
+
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/detail') {
       //     final args = settings.arguments as String;
