@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
               controller: _usernameController,
               decoration: const InputDecoration(
                 filled: true,
-                labelText: 'Username!!!!!!',
+                labelText: 'Username',
               ),
             ),
             const SizedBox(height: 12.0),
