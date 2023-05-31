@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dailystudio_blog_project/archive/archive_main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
 
+import '../favorite/favorite.dart';
 import '../main.dart';
+import '../mainhome/home.dart';
 
 
 
@@ -38,11 +41,27 @@ class _AddPostState extends State<AddPost> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.pop(context);
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return HomePage();
+            }
+        ));
+      }
+      if(_selectedIndex == 1)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return FavoritePage();
+            }
+        ));
       }
       else if(_selectedIndex == 2)
       {
-        Navigator.pushNamed(context, '/main_archive');
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return ArchiveMain();
+            }
+        ));
       }
     });
   }
@@ -281,10 +300,11 @@ class _AddPostState extends State<AddPost> {
         'IMAGE': downloadUrl,
         'Title': title,
         'Content': content,
-        'likes': 0,
+        'favorite': false,
         'year' : date.year,
         'month' : date.month,
         'day' : date.day,
+        'wholeday' : date.year.toString() +  date.month.toString()  + date.day.toString(),
         'createdTime': FieldValue.serverTimestamp(),
         'modifiedTime': FieldValue.serverTimestamp(),
       }).then((onValue) {
@@ -313,9 +333,11 @@ class _AddPostState extends State<AddPost> {
           'Title': title,
           'Content': content,
           'likes': 0,
+          'favorite': false,
           'year' : date.year,
           'month' : date.month,
           'day' : date.day,
+          'wholeday' : date.year.toString()  + date.month.toString()  + date.day.toString(),
           'createdTime': FieldValue.serverTimestamp(),
           'modifiedTime': FieldValue.serverTimestamp(),
         }).then((onValue) {

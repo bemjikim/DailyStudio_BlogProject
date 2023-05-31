@@ -1,8 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dailystudio_blog_project/archive/archive_main.dart';
+import 'package:dailystudio_blog_project/mainhome/home.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
+import '../favorite/favorite.dart';
 import '../main.dart';
+import 'detail.dart';
 
 class ArchiveMonth extends StatefulWidget {
   final String selection;
@@ -18,14 +24,24 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.pop(context);
-        Navigator.pushNamed(context, '/');
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return HomePage();
+            }
+        ));
       }
-
+      if(_selectedIndex == 1)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return FavoritePage();
+            }
+        ));
+      }
       if (_selectedIndex == 2) {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/main_archive');
       }
+      _selectedIndex = 2;
     });
   }
 
@@ -58,7 +74,11 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_new),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push( context, MaterialPageRoute(
+                  builder: (context){
+                    return ArchiveMain();
+                  }
+              ));
             },
             color: Colors.white,
           ),
@@ -87,18 +107,93 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
               itemBuilder: (BuildContext context, int index)  {
                 final yearCollection = yearCollections[index];
                 // Extract the names of subcollections
+
                 return Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(35.0, 20, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(20.0, 5, 0, 0),
                         child: Container(
                           width: 600,
-                          child: Text(
-                              yearCollection.get('Title').toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 35,
+                                width: 35,
+                                child: IconButton(
+                                  onPressed: ()async{
+                                    if(yearCollection.get('favorite') == false)
+                                      try {
+                                        await FirebaseFirestore.instance
+                                            .collection('user')
+                                            .doc(cn!.name)
+                                            .collection('post')
+                                            .doc(years)
+                                            .collection('month')
+                                            .doc(month)
+                                            .collection('posted')
+                                            .doc(yearCollection.id).update({
+                                          'favorite' : true,
+                                        });
+                                        await FirebaseFirestore.instance
+                                            .collection('user')
+                                            .doc(cn!.name)
+                                            .collection('favorite')
+                                            .doc(yearCollection.id).set({
+                                              'IMAGE': yearCollection.get('IMAGE'),
+                                              'Title':  yearCollection.get('Title'),
+                                              'Content':  yearCollection.get('Content'),
+                                              'favorite':  true,
+                                              'year' :  yearCollection.get('year'),
+                                              'month' :  yearCollection.get('month'),
+                                              'day' :  yearCollection.get('day'),
+                                              'wholeday' : int.parse(yearCollection.get('wholeday')),
+                                        });
+                                        setState(() {
+                                        });
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text(e.toString())),
+                                        );
+                                      }
+
+                                    if(yearCollection.get('favorite') == true)
+                                      try {
+                                        await FirebaseFirestore.instance
+                                            .collection('user')
+                                            .doc(cn!.name)
+                                            .collection('post')
+                                            .doc(years)
+                                            .collection('month')
+                                            .doc(month)
+                                            .collection('posted')
+                                            .doc(yearCollection.id).update({
+                                          'favorite' : false,
+                                        });
+                                        await FirebaseFirestore.instance
+                                            .collection('user')
+                                            .doc(cn!.name)
+                                            .collection('favorite')
+                                            .doc(yearCollection.id).delete();
+                                        setState(() {
+                                        });
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text(e.toString())),
+                                        );
+                                      }
+                                  },
+                                    icon:  yearCollection.get('favorite')==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
+                                  iconSize: 20,
+                                ),
                               ),
+                              Text(
+                                  yearCollection.get('Title').toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -106,11 +201,20 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                         padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
                         child: Stack(
                           children:[
-                            Image.asset(
-                              'assets/default.png',
-                              height: 200.0,
-                              width: 350.0,
-                              fit: BoxFit.fill,
+                            InkWell(
+                              onTap: () {
+                                Navigator.push( context, MaterialPageRoute(
+                                    builder: (context){
+                                      return ArchiveDetail(detailed: yearCollection.id + "/" + yearCollection.get('year').toString() + "/" + month.toString() + "/" + yearCollection.get('day').toString());
+                                    }
+                                ));
+                              },
+                              child: Image.network(
+                                yearCollection.get('IMAGE'),
+                                height: 200.0,
+                                width: 350.0,
+                                fit: BoxFit.fill,
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 0),
