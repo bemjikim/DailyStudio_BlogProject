@@ -27,21 +27,13 @@ class DailyStudioBlog extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shrine',
-      initialRoute: '/login',
-      routes: {
-        '/login': (BuildContext context) => LoginPage(),
-        '/': (BuildContext context) => HomePage(),
-        '/signup': (BuildContext context) =>  SignUpPage(),
-        '/addpost' : (BuildContext context) =>  AddPost(),
-        '/main_archive' : (BuildContext context) =>  ArchiveMain(),
-      },
-
+      home: LoginPage(),
       // onGenerateRoute: (settings) {
-      //   if (settings.name == '/detail') {
+      //   if (settings.name == '/month_archive') {
       //     final args = settings.arguments as String;
       //     return MaterialPageRoute(
       //       builder: (context) {
-      //         return DetailPage(titled: args,);
+      //         return ArchiveMonth(selection: args,);
       //       },
       //     );
       //   }

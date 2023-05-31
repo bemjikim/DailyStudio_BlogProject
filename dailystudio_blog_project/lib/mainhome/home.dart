@@ -1,3 +1,7 @@
+import 'package:dailystudio_blog_project/archive/add_post.dart';
+import 'package:dailystudio_blog_project/archive/archive_main.dart';
+import 'package:dailystudio_blog_project/favorite/favorite.dart';
+import 'package:dailystudio_blog_project/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +20,21 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
       if(_selectedIndex == 2)
         {
-          Navigator.pushNamed(context, '/main_archive');
+          Navigator.push( context, MaterialPageRoute(
+              builder: (context){
+                return ArchiveMain();
+              }
+          ));
         }
+      if(_selectedIndex == 1)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return FavoritePage();
+            }
+        ));
+      }
+      _selectedIndex = 0;
     });
   }
 
@@ -45,7 +62,11 @@ class _HomePageState extends State<HomePage> {
                     minimumSize: const Size(360, 38),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/addpost');
+                    Navigator.push( context, MaterialPageRoute(
+                        builder: (context){
+                          return AddPost();
+                        }
+                    ));
                   },
                 ),
               ),
@@ -61,7 +82,11 @@ class _HomePageState extends State<HomePage> {
                     minimumSize: const Size(360, 38),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/main_archive');
+                    Navigator.push( context, MaterialPageRoute(
+                        builder: (context){
+                          return ArchiveMain();
+                        }
+                    ));
                   },
                 ),
               ),
@@ -78,7 +103,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onPressed: () {
                     currentUserProvider.removeUser(cn!);
-                    Navigator.pushNamed(context, '/login');
+                    Navigator.push( context, MaterialPageRoute(
+                        builder: (context){
+                          return LoginPage();
+                        }
+                    ));
                   },
                 ),
               ),

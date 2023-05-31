@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dailystudio_blog_project/login/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
+import '../mainhome/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -68,7 +70,11 @@ class _LoginPageState extends State<LoginPage> {
                       primary: Colors.black
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/signup');
+                    Navigator.push( context, MaterialPageRoute(
+                        builder: (context){
+                          return SignUpPage();
+                        }
+                    ));
                   },
                 ),
                 ElevatedButton(
@@ -90,7 +96,11 @@ class _LoginPageState extends State<LoginPage> {
                     currentUserProvider.adduser(name);
                     final isMatched = await _handleSubmitted(uid, password);
                     if (isMatched) {
-                      Navigator.pop(context);
+                      Navigator.push( context, MaterialPageRoute(
+                          builder: (context){
+                            return HomePage();
+                          }
+                      ));
                     } else {
                       showDialog(
                         context: context,
@@ -106,7 +116,6 @@ class _LoginPageState extends State<LoginPage> {
                                     _passwordController.clear();
                                     _usernameController.clear();
                                   });
-                                  Navigator.of(context).pop();
                                 },
                               ),
                             ],

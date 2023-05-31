@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
 
+import '../favorite/favorite.dart';
 import '../main.dart';
+import '../mainhome/home.dart';
 import 'archive_month.dart';
 
 
@@ -18,15 +21,10 @@ class ArchiveMain extends StatefulWidget {
 class _ArchiveMainState extends State<ArchiveMain> {
   PickedFile? _image;
   DateTime date = DateTime.now();
-  late DocumentSnapshot productSnapshot;
-  final TextEditingController _title = new TextEditingController();
-  final TextEditingController _content = new TextEditingController();
-  final TextEditingController _price = new TextEditingController();
 
+  late DocumentSnapshot productSnapshot;
   int _selectedIndex = 2;
   bool _isTitle = false;
-  bool _isContent = false;
-  bool _isLoading = false;
 
   Future getImage() async {
     var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
@@ -34,15 +32,30 @@ class _ArchiveMainState extends State<ArchiveMain> {
     setState(() {
       _image = image!;
     });
+    _selectedIndex = 2;
   }
+
+
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Navigator.pop(context);
-        Navigator.pushNamed(context, '/');
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return HomePage();
+            }
+        ));
       }
+      if(_selectedIndex == 1)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return FavoritePage();
+            }
+        ));
+      }
+      _selectedIndex = 2;
     });
   }
   @override
@@ -60,7 +73,11 @@ class _ArchiveMainState extends State<ArchiveMain> {
                 child: IconButton(
                   icon: Icon(Icons.arrow_back_ios_new),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.push( context, MaterialPageRoute(
+                        builder: (context){
+                          return HomePage();
+                        }
+                    ));
                   },
                 )
             ),
@@ -86,15 +103,23 @@ class _ArchiveMainState extends State<ArchiveMain> {
               }
 
               final yearCollections = snapshot.data?.docs ?? [];
-
+              if(yearCollections.length ==0)
+                {
+                  return Center(
+                    child: Text(
+                      "There is no data"
+                    ),
+                  );
+                }
               return ListView.builder(
                 itemCount: yearCollections.length,
                 itemBuilder: (BuildContext context, int index)  {
                   final yearCollection = yearCollections[index];
-                  final monthCollection = yearCollection.reference.collection(yearCollection.id);
+
                   // Extract the names of subcollections
                   return Column(
                     children: [
+                      if(yearCollections.length != 0)
                       ListTile(
                         title: Text(yearCollection.id + "년"),
                       ),
@@ -110,7 +135,10 @@ class _ArchiveMainState extends State<ArchiveMain> {
                           }
 
                           final monthDocs = snapshot.data?.docs ?? [];
-
+                          if(monthDocs.isEmpty)
+                          {
+                            return Text("There is the no data");
+                          }
                           return GridView.builder(
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
@@ -121,30 +149,61 @@ class _ArchiveMainState extends State<ArchiveMain> {
                             itemBuilder: (BuildContext context, int index) {
                               final month = monthDocs[index].id;
 
-                              return GridTile(
-                                child: Column(
-                                    children:[
+                              return FutureBuilder<QuerySnapshot>(
+                                future: FirebaseFirestore.instance
+                                    .collection('user')
+                                    .doc(cn!.name)
+                                    .collection('post')
+                                    .doc(yearCollection.id)
+                                    .collection('month')
+                                    .doc(month)
+                                    .collection('posted')
+                                    .get(),
+                                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+
+                                  if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+
+                                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                    return SizedBox(); // 빈 컨테이너 또는 로딩 상태를 보여줄 위젯을 반환합니다.
+                                  }
+
+                                  final productSnapshot = snapshot.data!.docs.last;
+                                  return GridTile(
+                                    child: Column(
+                                      children: [
                                         InkWell(
                                           onTap: () {
-                                              Navigator.push( context, MaterialPageRoute(
-                                                  builder: (context){
-                                                    return ArchiveMonth(selection: yearCollection.id.toString() + "/" + month.toString());
-                                                  }
-                                              ));
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return ArchiveMonth(
+                                                    selection: yearCollection.id.toString() + "/" + month.toString(),
+                                                  );
+                                                },
+                                              ),
+                                            );
                                           },
-                                          child: Image.asset(
-                                          'assets/default.png',
-                                          height: 100.0,
-                                          width: 110.0,
-                                          fit: BoxFit.fill,
-                                      ),
-                                        )
-                                      ,Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(month + "월"),
-                                      )
-                                    ]
-                                ),
+                                          child: Image.network(
+                                            productSnapshot['IMAGE'],
+                                            height: 100.0,
+                                            width: 110.0,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(month + "월"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               );
                             },
                           );
@@ -189,64 +248,6 @@ class _ArchiveMainState extends State<ArchiveMain> {
         ),
       ),
     );
-  }
-  Future<void> _handleSubmitted(
-      String title, String content, File img, String name) async {
-    setState(() {
-      _isLoading = true;
-      FocusScope.of(context).unfocus();
-    });
-    final firebaseStorageRef = FirebaseStorage.instance;
-    final postRef = FirebaseFirestore.instance.collection('user').doc(name);
-    final postYear = postRef.collection('post').doc(date.year.toString());
-    final postMonth = postYear.collection(date.month.toString()).doc(title);
-    if(_image == null){
-      var downloadUrl =
-          "https://firebasestorage.googleapis.com/v0/b/dailyblogproject-e323c.appspot.com/o/post%2F%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.png?alt=media&token=fdbd13ff-bec6-4615-ae91-20410ff83a8a";
-      postMonth.set({
-        'IMAGE': downloadUrl,
-        'Title': title,
-        'Content': content,
-        'likes': 0,
-        'year' : date.year,
-        'month' : date.month,
-        'day' : date.day,
-        'createdTime': FieldValue.serverTimestamp(),
-        'modifiedTime': FieldValue.serverTimestamp(),
-      }).then((onValue) {
-        //정보 인서트후, 상위페이지로 이동
-        Navigator.pop(context);
-      });
-    }
-    else{
-      TaskSnapshot task = await firebaseStorageRef
-          .ref() // 시작점
-          .child('post') // collection 이름
-          .child(title) // 업로드한 파일의 최종이름, 본인이 원하는 이름.
-          .putFile(File(_image!.path));
-      if (task != null) {
-        // 업로드 완료되면 데이터의 주소를 얻을수 있음, future object
-        var downloadUrl = await task.ref.getDownloadURL();
-
-        // post collection 만들고, 하위에 문서를 만든다
-        postMonth.set({
-          'IMAGE': downloadUrl,
-          'Title': title,
-          'Content': content,
-          'likes': 0,
-          'year' : date.year,
-          'month' : date.month,
-          'day' : date.day,
-          'createdTime': FieldValue.serverTimestamp(),
-          'modifiedTime': FieldValue.serverTimestamp(),
-        }).then((onValue) {
-          //정보 인서트후, 상위페이지로 이동
-          Navigator.pop(context);
-        });
-      }
-    }
-
-
   }
 }
 
