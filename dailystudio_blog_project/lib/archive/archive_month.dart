@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../favorite/favorite.dart';
 import '../main.dart';
+import '../mypage/setting.dart';
 import 'detail.dart';
 
 class ArchiveMonth extends StatefulWidget {
@@ -43,6 +44,15 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
       }
       _selectedIndex = 2;
     });
+
+    if(_selectedIndex == 3)
+    {
+      Navigator.push( context, MaterialPageRoute(
+          builder: (context){
+            return SettingPage();
+          }
+      ));
+    }
   }
 
   @override

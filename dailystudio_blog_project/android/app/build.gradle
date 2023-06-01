@@ -50,7 +50,7 @@ android {
         applicationId "com.example.dailystudio_blog_project"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -74,4 +74,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:32.0.0')
     implementation "com.android.support:multidex:1.0.3"
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta5'
+    configurations.all {
+        resolutionStrategy {
+            force 'com.squareup.okhttp:okhttp:2.7.5'
+            force 'com.squareup.okio:okio:1.17.5'
+        }
+    }
 }

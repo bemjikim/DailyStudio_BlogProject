@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ import 'package:provider/provider.dart';
 import '../favorite/favorite.dart';
 import '../main.dart';
 import '../mainhome/home.dart';
+import '../mypage/setting.dart';
 
 enum DetailPageState {
   normal,
@@ -40,9 +42,12 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
   bool _isImage = false;
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
+  String scannedText = "";
+  List<ImageLabel> labels = [];
+  bool isImageLoaded = false;
   late List<String> dates;
-
+  late List<String> tags;
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -68,17 +73,41 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
             }
         ));
       }
+      if(_selectedIndex == 3)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return SettingPage();
+            }
+        ));
+      }
       _selectedIndex = 2;
     });
   }
 
   Future getImage() async {
-    var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    var image  = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final ImageLabeler imageLabeler = GoogleMlKit.vision.imageLabeler();
 
     setState(() {
       _image = image!;
       _isImage = true;
     });
+
+    if (_image != null) {
+      setState(() {
+        isImageLoaded = true;
+      });
+    }
+    final inputImage = InputImage.fromFilePath(_image!.path);
+    final List<ImageLabel> imageLabels = await imageLabeler.processImage(inputImage);
+    setState(() {
+      labels = imageLabels;
+    });
+
+    for (var label in labels) {
+      scannedText += '#'+ label.label + ' ';
+    }
   }
 
   void _handleCreateButtonPressed() {
@@ -114,6 +143,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
       }
       _titleController.text = data['Title'];
       _descriptionController.text = data['Content'];
+      tags = data['tag'].split(' ');
     }
     i++;
   }
@@ -265,6 +295,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         'Title': _titleController.text,
                         'Content': _descriptionController.text,
                         'IMAGE': downloadUrl,
+                        'tag': scannedText,
                     });
 
                     setState(() {
@@ -411,17 +442,33 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                 ),
               _pageState == DetailPageState.normal?Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Container(
-                  width: 348,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                    width: 1,
-                    color: Colors.orange,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 348,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                        width: 1,
+                        color: Colors.orange,
+                        ),
+                        ),
+                      child: Text(
+                        data['Content'],
+                      ),
                     ),
+                    Container(
+                      width: 348,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      child: Text(
+                        data['tag'],
+                      ),
                     ),
-                  child: Text(
-                    data['Content'],
-                  ),
+                  ],
                 ),
               ):Container(
                 width: 348,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
+import '../mypage/setting.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,6 +19,14 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if(_selectedIndex == 3)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return SettingPage();
+            }
+        ));
+      }
       if(_selectedIndex == 2)
         {
           Navigator.push( context, MaterialPageRoute(

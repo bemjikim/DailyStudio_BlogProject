@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dailystudio_blog_project/archive/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../favorite/favorite.dart';
 import '../main.dart';
 import '../mainhome/home.dart';
+import '../mypage/setting.dart';
 import 'archive_month.dart';
 
 
@@ -55,6 +57,14 @@ class _ArchiveMainState extends State<ArchiveMain> {
             }
         ));
       }
+      if(_selectedIndex == 3)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return SettingPage();
+            }
+        ));
+      }
       _selectedIndex = 2;
     });
   }
@@ -83,13 +93,28 @@ class _ArchiveMainState extends State<ArchiveMain> {
             ),
             title: Center(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 50.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                 child: const Text(
                   '기록 보관소',
                   style: TextStyle(fontSize: 20),
                 ),
               ),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                child: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    Navigator.push( context, MaterialPageRoute(
+                        builder: (context){
+                          return SearchPage();
+                        }
+                    ));
+                  },
+                ),
+              )
+            ],
           ),
           body: StreamBuilder<QuerySnapshot>(
             stream: postRef.collection('post').snapshots(),
@@ -192,7 +217,7 @@ class _ArchiveMainState extends State<ArchiveMain> {
                                           child: Image.network(
                                             productSnapshot['IMAGE'],
                                             height: 100.0,
-                                            width: 110.0,
+                                            width: 125.0,
                                             fit: BoxFit.fill,
                                           ),
                                         ),

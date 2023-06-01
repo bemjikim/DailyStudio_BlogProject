@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../archive/detail.dart';
 import '../main.dart';
+import '../mypage/setting.dart';
 
 
 class FavoritePage extends StatefulWidget {
@@ -30,6 +31,14 @@ class _FavoritePageState extends State<FavoritePage> {
         Navigator.push( context, MaterialPageRoute(
             builder: (context){
               return ArchiveMain();
+            }
+        ));
+      }
+      if(_selectedIndex == 3)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return SettingPage();
             }
         ));
       }

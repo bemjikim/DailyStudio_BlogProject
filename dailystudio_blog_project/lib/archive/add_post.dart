@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dailystudio_blog_project/archive/archive_main.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
-
 import '../favorite/favorite.dart';
 import '../main.dart';
 import '../mainhome/home.dart';
+import '../mypage/setting.dart';
 
 
 
@@ -20,6 +21,9 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   PickedFile? _image;
   DateTime date = DateTime.now();
+  String scannedText = "";
+  List<ImageLabel> labels = [];
+  bool isImageLoaded = false;
   late DocumentSnapshot productSnapshot;
   final TextEditingController _title = new TextEditingController();
   final TextEditingController _content = new TextEditingController();
@@ -30,40 +34,88 @@ class _AddPostState extends State<AddPost> {
   bool _isLoading = false;
 
   Future getImage() async {
-    var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    var image  = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final ImageLabeler imageLabeler = GoogleMlKit.vision.imageLabeler();
 
     setState(() {
-      _image = image!;
+        _image = image!;
+      });
+
+    if (_image != null) {
+      setState(() {
+        isImageLoaded = true;
+      });
+    }
+    final inputImage = InputImage.fromFilePath(_image!.path);
+    final List<ImageLabel> imageLabels = await imageLabeler.processImage(inputImage);
+    setState(() {
+      labels = imageLabels;
     });
+
+    for (var label in labels) {
+      scannedText += '#'+ label.label + ' ';
+    }
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if (_selectedIndex == 0) {
-        Navigator.push( context, MaterialPageRoute(
-            builder: (context){
-              return HomePage();
-            }
-        ));
-      }
-      if(_selectedIndex == 1)
-      {
-        Navigator.push( context, MaterialPageRoute(
-            builder: (context){
-              return FavoritePage();
-            }
-        ));
-      }
-      else if(_selectedIndex == 2)
-      {
-        Navigator.push( context, MaterialPageRoute(
-            builder: (context){
-              return ArchiveMain();
-            }
-        ));
-      }
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('알림'),
+          content: Text('작성하고 계시는 글이 삭제됩니다\n괜찮으시겠습니까?'),
+          actions: [
+            TextButton(
+              child: Text('아니요'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            TextButton(
+              child: Text('예'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                  _selectedIndex = index;
+                  if (_selectedIndex == 0) {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return HomePage();
+                        }
+                    ));
+                  }
+                  if (_selectedIndex == 1) {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return FavoritePage();
+                        }
+                    ));
+                  }
+                  else if (_selectedIndex == 2) {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return ArchiveMain();
+                        }
+                    ));
+                  }
+
+                  if (_selectedIndex == 3) {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return SettingPage();
+                        }
+                    ));
+                  }
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -176,8 +228,8 @@ class _AddPostState extends State<AddPost> {
 
                           InkWell(
                             child: _image == null
-                                ? new Image.asset(
-                              'assets/default.png',
+                                ?  Image.network(
+                              "https://firebasestorage.googleapis.com/v0/b/dailyblogproject-e323c.appspot.com/o/post%2F%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.png?alt=media&token=fdbd13ff-bec6-4615-ae91-20410ff83a8a",
                               height: 200.0,
                               width: 370.0,
                               fit: BoxFit.fill,
@@ -232,11 +284,35 @@ class _AddPostState extends State<AddPost> {
                           primary: Colors.white60,
                           minimumSize: const Size(370, 34)
                       ),
-                      onPressed: _isTitle && _isContent && !_isLoading
-                          ? () => _handleSubmitted(_title.text,
-                          _content.text, _image == null?File(
-                              "https://firebasestorage.googleapis.com/v0/b/dailyblogproject-e323c.appspot.com/o/post%2F%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.png?alt=media&token=fdbd13ff-bec6-4615-ae91-20410ff83a8a"):File(_image!.path), cn!.name)
-                          : null,
+                      onPressed: (){
+                        if(_isTitle && _isContent && !_isLoading &&_image != null)
+                          {
+                            _handleSubmitted(_title.text,
+                                _content.text, File(_image!.path), cn!.name);
+                          }
+                        else
+                          {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('알림'),
+                                  content: Text('제목, 사진, 내용을 기입해주세요'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                      }
                     ),
                   ],
                 ),
@@ -304,6 +380,7 @@ class _AddPostState extends State<AddPost> {
         'year' : date.year,
         'month' : date.month,
         'day' : date.day,
+        'tag': scannedText,
         'wholeday' : date.year.toString() +  date.month.toString()  + date.day.toString(),
         'createdTime': FieldValue.serverTimestamp(),
         'modifiedTime': FieldValue.serverTimestamp(),
@@ -337,6 +414,7 @@ class _AddPostState extends State<AddPost> {
           'year' : date.year,
           'month' : date.month,
           'day' : date.day,
+          'tag': scannedText,
           'wholeday' : date.year.toString()  + date.month.toString()  + date.day.toString(),
           'createdTime': FieldValue.serverTimestamp(),
           'modifiedTime': FieldValue.serverTimestamp(),
