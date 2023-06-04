@@ -183,14 +183,15 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                                       }
                                   },
                                     icon:  yearCollection.get('favorite')==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
-                                  iconSize: 20,
+                                  iconSize: 24,
                                 ),
                               ),
                               Text(
                                   yearCollection.get('Title').toString(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: 22,
+
                                   ),
                               ),
                             ],

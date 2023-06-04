@@ -46,73 +46,116 @@ class _HomePageState extends State<HomePage> {
 
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  child: const Text(
-                    '사진 찍으러 왔어요! (기록 남기기)',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white60,
-                    minimumSize: const Size(360, 38),
-                  ),
-                  onPressed: () {
-                    Navigator.push( context, MaterialPageRoute(
-                        builder: (context){
-                          return AddPost();
-                        }
-                    ));
-                  },
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  child: const Text(
-                    '사진 찾으러 왔어요! (기록 보관소)',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white60,
-                    minimumSize: const Size(360, 38),
-                  ),
-                  onPressed: () {
-                    Navigator.push( context, MaterialPageRoute(
-                        builder: (context){
-                          return ArchiveMain();
-                        }
-                    ));
-                  },
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  child: Text(
-                    "로그아웃", // 인덱스 0에 해당하는 요소가 없을 경우 빈 문자열 반환
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white60,
-                    minimumSize: const Size(360, 38),
-                  ),
-                  onPressed: () {
-                    currentUserProvider.removeUser(cn!);
-                    Navigator.push( context, MaterialPageRoute(
-                        builder: (context){
-                          return LoginPage();
-                        }
-                    ));
-                  },
-                ),
-              ),
-            ],
+        appBar: AppBar(
+          backgroundColor: Colors.grey,
+          automaticallyImplyLeading: false,
+          title: Center(
+            child: Padding(
+              padding:  EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+              child:  Text("Daily Studio"),
+            ),
           ),
+        ),
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'assets/main.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+
+
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: 380,),
+                  Container(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      child: const Text(
+                        '사진 찍으러 왔어요! (기록 남기기)',
+                        style: TextStyle(
+                            color: Color(0xFF443C34),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary:  Color(0xFFE3CFB8),
+                        minimumSize: const Size(360, 46),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push( context, MaterialPageRoute(
+                            builder: (context){
+                              return AddPost();
+                            }
+                        ));
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8,),
+                  Container(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      child: const Text(
+                        '사진 찾으러 왔어요! (기록 보관소)',
+                        style: TextStyle(
+                            color: Color(0xFF443C34),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary:  Color(0xFFE3CFB8),
+                        minimumSize: const Size(360, 46),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push( context, MaterialPageRoute(
+                            builder: (context){
+                              return ArchiveMain();
+                            }
+                        ));
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8,),
+                  Container(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      child: Text(
+                        "로그아웃", // 인덱스 0에 해당하는 요소가 없을 경우 빈 문자열 반환
+                        style: TextStyle(
+                            color: Color(0xFF443C34),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary:  Color(0xFFE3CFB8),
+                        minimumSize: const Size(360, 46),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                        ),
+                      ),
+                      onPressed: () {
+                        currentUserProvider.removeUser(cn!);
+                        Navigator.push( context, MaterialPageRoute(
+                            builder: (context){
+                              return LoginPage();
+                            }
+                        ));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
