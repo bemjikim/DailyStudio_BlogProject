@@ -254,7 +254,7 @@ class SearchPageState extends State<SearchPage> {
                         print(productSnapshots.length);
                         final filteredSnapshots = productSnapshots.where((snapshot) => snapshot['tag'].toString().contains(_searchController.text)).toList();
                         print(filteredSnapshots.length);
-                        if(_searchController.text.length == 0)
+                        if(_searchController.text.length == 0 || filteredSnapshots.isEmpty)
                           {
                             return Center(
                               child: Text("There is no data."),
