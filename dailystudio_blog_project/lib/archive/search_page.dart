@@ -109,10 +109,12 @@ class SearchPageState extends State<SearchPage> {
       home: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.grey,
+            backgroundColor: Color(0xFFFEF5ED),
+            elevation: 1,
             leading: Expanded(
               child: IconButton(
-                icon: Icon(Icons.arrow_back_ios_new),
+                icon: Icon(Icons.arrow_back_ios_new,
+                    color: Color(0xFF72614E)),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return HomePage();
@@ -125,265 +127,280 @@ class SearchPageState extends State<SearchPage> {
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 50.0, 0.0),
                 child: const Text(
                   '검색',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF72614E) ),
                 ),
               ),
             ),
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                          controller: _searchController,
-                          autofocus: true,
-                          decoration: InputDecoration(
+          body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/background.png'), // Replace 'assets/a.png' with the path to your image
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                            controller: _searchController,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                          ),
                         ),
                       ),
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed:(){
-                          _search(cn!.name, _searchController.text);
-                        }
-                    ),
-                  ],
-                ),
-              ),
-              if(!_isSearch || _searchController.text.length == 0)
-                ListTile(
-                  title: Text(
-                    "검색을 해주세요"
+                      IconButton(
+                          icon: Icon(Icons.search,
+                              color: Color(0xFF72614E)),
+                          onPressed:(){
+                            _search(cn!.name, _searchController.text);
+                          }
+                      ),
+                    ],
                   ),
                 ),
-              if(_isSearch && _searchController.text.length > 0)
-                Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: postRef.collection('post').snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
+                if(!_isSearch || _searchController.text.length == 0)
+                  ListTile(
+                    title: Text(
+                      "검색을 해주세요",
+                      style: TextStyle (
+                        fontWeight: FontWeight.w400
+                      ),
+                    ),
+                  ),
+                if(_isSearch && _searchController.text.length > 0)
+                  Expanded(
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: postRef.collection('post').snapshots(),
+                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      }
-                      final yearCollections = snapshot.data?.docs ?? [];
-                      if (yearCollections.length == 0) {
-                        return Center(
-                          child: Text("There is no data"),
-                        );
-                      }
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        final yearCollections = snapshot.data?.docs ?? [];
+                        if (yearCollections.length == 0) {
+                          return Center(
+                            child: Text("There is no data"),
+                          );
+                        }
 
-                      List<DocumentSnapshot> displayedResults = _searchResults;
+                        List<DocumentSnapshot> displayedResults = _searchResults;
 
-                      return ListView.builder(
-                        itemCount: yearCollections.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final yearCollection = yearCollections[index];
+                        return ListView.builder(
+                          itemCount: yearCollections.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final yearCollection = yearCollections[index];
 
-                          // Extract the names of subcollections
-                          return StreamBuilder<QuerySnapshot>(
-                            stream: yearCollection.reference.collection('month').snapshots(),
-                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              }
+                            // Extract the names of subcollections
+                            return StreamBuilder<QuerySnapshot>(
+                              stream: yearCollection.reference.collection('month').snapshots(),
+                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                }
 
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
 
-                              final monthDocs = snapshot.data?.docs ?? [];
-                              if (monthDocs.isEmpty) {
-                                return Text("There is no data");
-                              }
+                                final monthDocs = snapshot.data?.docs ?? [];
+                                if (monthDocs.isEmpty) {
+                                  return Text("There is no data");
+                                }
 
-                              return ListView.builder(
-                                // 스크롤 동작 비활성화
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: monthDocs.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final month = monthDocs[index].id;
+                                return ListView.builder(
+                                  // 스크롤 동작 비활성화
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: monthDocs.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    final month = monthDocs[index].id;
 
-                                  return StreamBuilder<QuerySnapshot>(
-                                    stream: yearCollection.reference
-                                        .collection('month')
-                                        .doc(month)
-                                        .collection('posted')
-                                        .orderBy('day')
-                                        .snapshots(),
-                                    builder:
-                                        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                      if (snapshot.hasError) {
-                                        return Text('Error: ${snapshot.error}');
-                                      }
+                                    return StreamBuilder<QuerySnapshot>(
+                                      stream: yearCollection.reference
+                                          .collection('month')
+                                          .doc(month)
+                                          .collection('posted')
+                                          .orderBy('day')
+                                          .snapshots(),
+                                      builder:
+                                          (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Text('Error: ${snapshot.error}');
+                                        }
 
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      }
+                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                          return CircularProgressIndicator();
+                                        }
 
-                                      final productSnapshots = snapshot.data?.docs ?? [];
-                                      if (productSnapshots.isEmpty) {
-                                        return SizedBox(); // 빈 컨테이너 또는 로딩 상태를 보여줄 위젯을 반환합니다.
-                                      }
+                                        final productSnapshots = snapshot.data?.docs ?? [];
+                                        if (productSnapshots.isEmpty) {
+                                          return SizedBox(); // 빈 컨테이너 또는 로딩 상태를 보여줄 위젯을 반환합니다.
+                                        }
 
-                                      return ListView.builder(
-                                        // 스크롤 동작 비활성화
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemCount: productSnapshots.length,
-                                        itemBuilder: (BuildContext context, int index) {
-                                          final productSnapshot = productSnapshots[index];
-                                          if(productSnapshot['tag'].toLowerCase().contains(_searchController.text))
-                                          return Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.fromLTRB(20.0, 5, 0, 0),
-                                                child: Container(
-                                                  width: 600,
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        height: 35,
-                                                        width: 35,
-                                                        child: IconButton(
-                                                          onPressed: () async {
-                                                            if (productSnapshot['favorite'] == false)
-                                                              try {
-                                                                await FirebaseFirestore.instance
-                                                                    .collection('user')
-                                                                    .doc(cn!.name)
-                                                                    .collection('post')
-                                                                    .doc(yearCollection.id)
-                                                                    .collection('month')
-                                                                    .doc(month)
-                                                                    .collection('posted')
-                                                                    .doc(productSnapshot.id)
-                                                                    .update({
-                                                                  'favorite': true,
-                                                                });
-                                                                await FirebaseFirestore.instance
-                                                                    .collection('user')
-                                                                    .doc(cn!.name)
-                                                                    .collection('favorite')
-                                                                    .doc(productSnapshot.id)
-                                                                    .set({
-                                                                  'IMAGE': productSnapshot['IMAGE'],
-                                                                  'Title': productSnapshot['Title'],
-                                                                  'Content': productSnapshot['Content'],
-                                                                  'favorite': true,
-                                                                  'year': productSnapshot['year'],
-                                                                  'month': productSnapshot['month'],
-                                                                  'day': productSnapshot['day'],
-                                                                  'wholeday': int.parse(
-                                                                      productSnapshot['wholeday']),
-                                                                });
-                                                                setState(() {});
-                                                              } catch (e) {
-                                                                ScaffoldMessenger.of(context)
-                                                                    .showSnackBar(
-                                                                  SnackBar(content: Text(e.toString())),
-                                                                );
-                                                              }
+                                        return ListView.builder(
+                                          // 스크롤 동작 비활성화
+                                          shrinkWrap: true,
+                                          physics: NeverScrollableScrollPhysics(),
+                                          itemCount: productSnapshots.length,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            final productSnapshot = productSnapshots[index];
+                                            if(productSnapshot['tag'].toLowerCase().contains(_searchController.text))
+                                            return Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.fromLTRB(20.0, 5, 0, 0),
+                                                  child: Container(
+                                                    width: 600,
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                          height: 35,
+                                                          width: 35,
+                                                          child: IconButton(
+                                                            onPressed: () async {
+                                                              if (productSnapshot['favorite'] == false)
+                                                                try {
+                                                                  await FirebaseFirestore.instance
+                                                                      .collection('user')
+                                                                      .doc(cn!.name)
+                                                                      .collection('post')
+                                                                      .doc(yearCollection.id)
+                                                                      .collection('month')
+                                                                      .doc(month)
+                                                                      .collection('posted')
+                                                                      .doc(productSnapshot.id)
+                                                                      .update({
+                                                                    'favorite': true,
+                                                                  });
+                                                                  await FirebaseFirestore.instance
+                                                                      .collection('user')
+                                                                      .doc(cn!.name)
+                                                                      .collection('favorite')
+                                                                      .doc(productSnapshot.id)
+                                                                      .set({
+                                                                    'IMAGE': productSnapshot['IMAGE'],
+                                                                    'Title': productSnapshot['Title'],
+                                                                    'Content': productSnapshot['Content'],
+                                                                    'favorite': true,
+                                                                    'year': productSnapshot['year'],
+                                                                    'month': productSnapshot['month'],
+                                                                    'day': productSnapshot['day'],
+                                                                    'wholeday': int.parse(
+                                                                        productSnapshot['wholeday']),
+                                                                  });
+                                                                  setState(() {});
+                                                                } catch (e) {
+                                                                  ScaffoldMessenger.of(context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(content: Text(e.toString())),
+                                                                  );
+                                                                }
 
-                                                            if (productSnapshot['favorite'] == true)
-                                                              try {
-                                                                await FirebaseFirestore.instance
-                                                                    .collection('user')
-                                                                    .doc(cn!.name)
-                                                                    .collection('post')
-                                                                    .doc(yearCollection.id)
-                                                                    .collection('month')
-                                                                    .doc(month)
-                                                                    .collection('posted')
-                                                                    .doc(productSnapshot.id)
-                                                                    .update({
-                                                                  'favorite': false,
-                                                                });
-                                                                await FirebaseFirestore.instance
-                                                                    .collection('user')
-                                                                    .doc(cn!.name)
-                                                                    .collection('favorite')
-                                                                    .doc(productSnapshot.id)
-                                                                    .delete();
-                                                                setState(() {});
-                                                              } catch (e) {
-                                                                ScaffoldMessenger.of(context)
-                                                                    .showSnackBar(
-                                                                  SnackBar(content: Text(e.toString())),
-                                                                );
-                                                              }
-                                                          },
-                                                          icon: productSnapshot['favorite'] == true
-                                                              ? Icon(Icons.star)
-                                                              : Icon(Icons.star_border_outlined),
-                                                          iconSize: 20,
+                                                              if (productSnapshot['favorite'] == true)
+                                                                try {
+                                                                  await FirebaseFirestore.instance
+                                                                      .collection('user')
+                                                                      .doc(cn!.name)
+                                                                      .collection('post')
+                                                                      .doc(yearCollection.id)
+                                                                      .collection('month')
+                                                                      .doc(month)
+                                                                      .collection('posted')
+                                                                      .doc(productSnapshot.id)
+                                                                      .update({
+                                                                    'favorite': false,
+                                                                  });
+                                                                  await FirebaseFirestore.instance
+                                                                      .collection('user')
+                                                                      .doc(cn!.name)
+                                                                      .collection('favorite')
+                                                                      .doc(productSnapshot.id)
+                                                                      .delete();
+                                                                  setState(() {});
+                                                                } catch (e) {
+                                                                  ScaffoldMessenger.of(context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(content: Text(e.toString())),
+                                                                  );
+                                                                }
+                                                            },
+                                                            icon: productSnapshot['favorite'] == true
+                                                                ? Icon(Icons.star)
+                                                                : Icon(Icons.star_border_outlined),
+                                                            iconSize: 20,
+                                                          ),
                                                         ),
+                                                        Text(
+                                                          productSnapshot['Title'].toString(),
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: 20,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
+                                                  child: Stack(children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                          return ArchiveDetail(detailed: productSnapshot.id + "/" + productSnapshot['year'].toString() + "/" + productSnapshot['month'].toString() + "/" + productSnapshot['day'].toString());
+                                                        }));
+                                                      },
+                                                      child: Image.network(
+                                                        productSnapshot['IMAGE'],
+                                                        height: 200.0,
+                                                        width: 350.0,
+                                                        fit: BoxFit.fill,
                                                       ),
-                                                      Text(
-                                                        productSnapshot['Title'].toString(),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 0),
+                                                      child: Text(
+                                                        productSnapshot['year'].toString() +
+                                                            '.' +
+                                                            productSnapshot['month'].toString() +
+                                                            '.' +
+                                                            productSnapshot['day'].toString(),
                                                         style: TextStyle(
                                                           fontWeight: FontWeight.bold,
                                                           fontSize: 20,
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ]),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
-                                                child: Stack(children: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                        return ArchiveDetail(detailed: productSnapshot.id + "/" + productSnapshot['year'].toString() + "/" + productSnapshot['month'].toString() + "/" + productSnapshot['day'].toString());
-                                                      }));
-                                                    },
-                                                    child: Image.network(
-                                                      productSnapshot['IMAGE'],
-                                                      height: 200.0,
-                                                      width: 350.0,
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 0),
-                                                    child: Text(
-                                                      productSnapshot['year'].toString() +
-                                                          '.' +
-                                                          productSnapshot['month'].toString() +
-                                                          '.' +
-                                                          productSnapshot['day'].toString(),
-                                                      style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 20,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ]),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
@@ -406,7 +423,8 @@ class SearchPageState extends State<SearchPage> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.amber[800],
+            backgroundColor: Color(0xFFFEF5ED),
+            selectedItemColor: Color(0xFF685F53),
             unselectedItemColor: Colors.grey,
             unselectedLabelStyle: TextStyle(
                 fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),

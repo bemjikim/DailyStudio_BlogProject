@@ -65,9 +65,11 @@ class _FavoritePageState extends State<FavoritePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.grey,
+          backgroundColor: Color(0xFFFEF5ED),
+          elevation: 1,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new),
+            icon: Icon(Icons.arrow_back_ios_new,
+                color: Color(0xFF72614E)),
             onPressed: () {
               Navigator.push( context, MaterialPageRoute(
                   builder: (context){
@@ -80,156 +82,142 @@ class _FavoritePageState extends State<FavoritePage> {
           title: Center(
             child: Padding(
               padding:  EdgeInsets.fromLTRB(0.0, 0.0, 50.0, 0.0),
-              child:  Text("기억에 남는 순간"),
+              child:  Text("기억에 남는 순간",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF72614E) ),),
             ),
           ),
         ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: postRef.snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/background.png'), // Replace 'assets/a.png' with the path to your image
+              fit: BoxFit.cover,
+            ),
+          ),
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            }
+          child: StreamBuilder<QuerySnapshot>(
+            stream: postRef.snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
 
-            final yearCollections = snapshot.data?.docs ?? [];
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
 
-            return ListView.builder(
-              itemCount: yearCollections.length,
-              itemBuilder: (BuildContext context, int index)  {
-                final yearCollection = yearCollections[index];
-                // Extract the names of subcollections
+              final yearCollections = snapshot.data?.docs ?? [];
 
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 5, 0, 0),
-                      child: Container(
-                        width: 600,
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 35,
-                              width: 35,
-                              child: IconButton(
-                                onPressed: ()async{
-                                  if(yearCollection.get('favorite') == false)
-                                    try {
-                                      await FirebaseFirestore.instance
-                                          .collection('user')
-                                          .doc(cn!.name)
-                                          .collection('post')
-                                          .doc(yearCollection.get('year'))
-                                          .collection('month')
-                                          .doc(yearCollection.get('month'))
-                                          .collection('posted')
-                                          .doc(yearCollection.id).update({
-                                        'favorite' : true,
-                                      });
-                                      await FirebaseFirestore.instance
-                                          .collection('user')
-                                          .doc(cn!.name)
-                                          .collection('favorite')
-                                          .doc(yearCollection.id).set({
-                                        'IMAGE': yearCollection.get('IMAGE'),
-                                        'Title':  yearCollection.get('Title'),
-                                        'Content':  yearCollection.get('Content'),
-                                        'favorite':  true,
-                                        'year' :  yearCollection.get('year'),
-                                        'month' :  yearCollection.get('month'),
-                                        'day' :  yearCollection.get('day'),
-                                        'wholeday' : int.parse(yearCollection.get('wholeday')),
-                                      });
-                                      setState(() {
-                                      });
-                                    } catch (e) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text(e.toString())),
-                                      );
-                                    }
+              return ListView.builder(
+                itemCount: yearCollections.length,
+                itemBuilder: (BuildContext context, int index)  {
+                  final yearCollection = yearCollections[index];
+                  // Extract the names of subcollections
 
-                                  if(yearCollection.get('favorite') == true)
-                                    try {
-                                      await FirebaseFirestore.instance
-                                          .collection('user')
-                                          .doc(cn!.name)
-                                          .collection('post')
-                                          .doc(yearCollection.get('year'))
-                                          .collection('month')
-                                          .doc(yearCollection.get('month'))
-                                          .collection('posted')
-                                          .doc(yearCollection.id).update({
-                                        'favorite' : false,
-                                      });
-                                      await FirebaseFirestore.instance
-                                          .collection('user')
-                                          .doc(cn!.name)
-                                          .collection('favorite')
-                                          .doc(yearCollection.id).delete();
-                                      setState(() {
-                                      });
-                                    } catch (e) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text(e.toString())),
-                                      );
-                                    }
-                                },
-                                icon:  yearCollection.get('favorite')==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
-                                iconSize: 20,
-                              ),
-                            ),
-                            Text(
-                              yearCollection.get('Title').toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
-                      child: Stack(
-                          children:[
-                            InkWell(
-                              onTap: () {
-                                Navigator.push( context, MaterialPageRoute(
-                                    builder: (context){
-                                      return ArchiveDetail(detailed: yearCollection.id + "/" + yearCollection.get('year').toString() + "/" + yearCollection.get('month').toString() + "/" + yearCollection.get('day').toString());
-                                    }
-                                ));
-                              },
-                              child: Image.network(
-                                yearCollection.get('IMAGE'),
-                                height: 200.0,
-                                width: 350.0,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 0),
-                              child: Text(
-                                yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString() + '.' + yearCollection.get('day').toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.black,
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+                        child: Container(
+                          width: 600,
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 35,
+                                width: 35,
+                                child: IconButton(
+                                  onPressed: ()async{
+                                      try {
+                                        await FirebaseFirestore.instance
+                                            .collection('user')
+                                            .doc(cn!.name)
+                                            .collection('post')
+                                            .doc(yearCollection.get('year').toString())
+                                            .collection('month')
+                                            .doc(yearCollection.get('month').toString())
+                                            .collection('posted')
+                                            .doc(yearCollection.id).update({
+                                          'favorite' : false,
+                                        });
+                                        await FirebaseFirestore.instance
+                                            .collection('user')
+                                            .doc(cn!.name)
+                                            .collection('favorite')
+                                            .doc(yearCollection.get('Title')).delete();
+                                        setState(() {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                            return FavoritePage();
+                                          }));
+                                        });
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text(e.toString())),
+                                        );
+                                      }
+                                  },
+                                  icon:  yearCollection.get('favorite')==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
+                                  iconSize: 28,
                                 ),
                               ),
-                            ),
-                          ]
+                              Padding(
+                                padding: const EdgeInsets.only(top: 7, left: 8),
+                                child: Text(
+                                  yearCollection.get('Title').toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
+                        child: Stack(
+                            children:[
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push( context, MaterialPageRoute(
+                                      builder: (context){
+                                        return ArchiveDetail(detailed: yearCollection.id + "/" + yearCollection.get('year').toString() + "/" + yearCollection.get('month').toString() + "/" + yearCollection.get('day').toString());
+                                      }
+                                  ));
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    yearCollection.get('IMAGE'),
+                                    height: 250.0,
+                                    width: 370.0,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(17.0, 11, 0, 0),
+                                child: Text(
+                                  yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString() + '.' + yearCollection.get('day').toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ]
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -252,7 +240,8 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          backgroundColor: Color(0xFFFEF5ED),
+          selectedItemColor: Color(0xFF685F53),
           unselectedItemColor: Colors.grey,
           unselectedLabelStyle: TextStyle(
               fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),

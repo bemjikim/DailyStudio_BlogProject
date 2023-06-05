@@ -67,10 +67,12 @@ class _SettingPageState extends State<SettingPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.grey,
+          backgroundColor: Color(0xFFFEF5ED),
+          elevation: 1,
           leading: Expanded(
               child: IconButton(
-                icon: Icon(Icons.arrow_back_ios_new),
+                icon: Icon(Icons.arrow_back_ios_new,
+                    color: Color(0xFF72614E)),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -81,208 +83,232 @@ class _SettingPageState extends State<SettingPage> {
               padding: const EdgeInsets.fromLTRB(0.0, 0.0, 55.0, 0.0),
               child: const Text(
                 '설정',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                    color: Color(0xFF72614E),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20),
               ),
             ),
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(10.0, 0.0, 15.0, 0.0),
-          child: Container(
-            width: 410,
-            // 디버깅을 위한 박스 데코레이션
-            // decoration: BoxDecoration(
-            //   border: Border.all(
-            //     width: 1,
-            //     color: Colors.orange,
-            //   ),
-            // ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          "계정",
-                          style: TextStyle(
-                            fontSize: 15,
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/background.png'), // Replace 'assets/a.png' with the path to your image
+              fit: BoxFit.cover,
+            ),
+          ),
+
+
+
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(10.0, 0.0, 15.0, 0.0),
+            child: Container(
+              width: 410,
+              // 디버깅을 위한 박스 데코레이션
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     width: 1,
+              //     color: Colors.orange,
+              //   ),
+              // ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5.0, 8.0, 0.0, 8.0),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            "계정",
+                            style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 305),
-                        Container(
-                          width: 20,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: (){
-                              Navigator.push( context, MaterialPageRoute(
-                                  builder: (context){
-                                    return MyPage();
-                                  }
-                              ));
-                            },
-                            icon: Icon(Icons.arrow_forward_ios_rounded),
+                          SizedBox(width: 305),
+                          Container(
+                            width: 20,
+                            height: 40,
+                            child: IconButton(
+                              onPressed: (){
+                                Navigator.push( context, MaterialPageRoute(
+                                    builder: (context){
+                                      return MyPage();
+                                    }
+                                ));
+                              },
+                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Divider(thickness: 0.5, height: 1, color: Colors.grey),
+                  Divider(thickness: 1, height: 1, color: Color(0xFFE3DADA)),
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          "라이트 모드",
-                          style: TextStyle(
-                            fontSize: 15,
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5.0, 8.0, 0.0, 8.0),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            "라이트 모드",
+                            style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 268),
-                        Container(
-                          width: 20,
-                          height: 40,
-                          child: Switch(
-                            thumbIcon: thumbIcon,
-                            value: light1,
-                            onChanged: (bool value) {
-                              setState(() {
-                                light1 = value;
-                                //전체 색상 여기서 조정 어둡게/밝게
-                              });
-                            },
+                          SizedBox(width: 260),
+                          Container(
+                            width: 20,
+                            height: 40,
+                            child: Switch(
+                              thumbIcon: thumbIcon,
+                              value: light1,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  light1 = value;
+                                  //전체 색상 여기서 조정 어둡게/밝게
+                                });
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Divider(thickness: 0.5, height: 1, color: Colors.grey),
+                  Divider(thickness: 1.5, height: 1,color: Color(0xFFE3DADA)),
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          "글꼴 변경하기",
-                          style: TextStyle(
-                            fontSize: 15,
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5.0, 8.0, 0.0, 8.0),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            "글꼴 변경하기",
+                            style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 246),
-                        Container(
-                          width: 20,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: (){},
-                            icon: Icon(Icons.arrow_forward_ios_rounded),
+                          SizedBox(width: 236),
+                          Container(
+                            width: 20,
+                            height: 40,
+                            child: IconButton(
+                              onPressed: (){},
+                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Divider(thickness: 0.5, height: 1, color: Colors.grey),
+                  Divider(thickness: 1, height: 1, color: Color(0xFFE3DADA)),
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          "문의하기",
-                          style: TextStyle(
-                            fontSize: 15,
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5.0, 8.0, 0.0, 8.0),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            "문의하기",
+                            style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 276),
-                        Container(
-                          width: 20,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: (){
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('개발자 INFO'),
-                                    content: Text('21900104@handong.ac.kr'),
-                                    actions: [
-                                      TextButton(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          setState(() {
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            icon: Icon(Icons.arrow_forward_ios_rounded),
+                          SizedBox(width: 272),
+                          Container(
+                            width: 20,
+                            height: 40,
+                            child: IconButton(
+                              onPressed: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('개발자 INFO'),
+                                      content: Text('21900104@handong.ac.kr'),
+                                      actions: [
+                                        TextButton(
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            setState(() {
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Divider(thickness: 0.5, height: 1, color: Colors.grey),
+                  Divider(thickness: 1, height: 1, color: Color(0xFFE3DADA)),
 
-                SizedBox(height: 290),
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 10.0),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          "버전",
-                          style: TextStyle(
-                            fontSize: 15,
+
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5.0, 16.0, 0.0, 16.0),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            "버전",
+                            style: TextStyle(
+                              fontSize: 17,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 305),
-                        Container(
-                          child: Text(
-                            "1.0.0"
+                          SizedBox(width: 296),
+                          Container(
+                            child: Text(
+                                "1.0.0",
+                              style: TextStyle(
+                                fontSize: 17
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Divider(thickness: 0.5, height: 1, color: Colors.grey),
-
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                  child: ElevatedButton(
-                    child: Text(
-                      "로그아웃", // 인덱스 0에 해당하는 요소가 없을 경우 빈 문자열 반환
-                      style: TextStyle(color: Colors.black),
+                  Divider(thickness: 1, height: 1, color: Color(0xFFE3DADA)),
+                  SizedBox(height: 220,),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                    child: ElevatedButton(
+                      child: Text(
+                        "로그아웃", // 인덱스 0에 해당하는 요소가 없을 경우 빈 문자열 반환
+                        style: TextStyle(
+                            color: Color(0xFF72614E),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary:  Color(0xFFE3CFB8),
+                        minimumSize: const Size(370, 46),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                        ),
+                      ),
+                      onPressed: () async{
+                        var name = CurrentUser(name: cn!.name);
+                        currentUserProvider.removeUser(name);
+                        Navigator.push( context, MaterialPageRoute(
+                            builder: (context){
+                              return LoginPage();
+                            }
+                        ));
+                      },
                     ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.white60,
-                      minimumSize: const Size(360, 38),
-                    ),
-                    onPressed: () {
-                      currentUserProvider.removeUser(cn!);
-                      Navigator.push( context, MaterialPageRoute(
-                          builder: (context){
-                            return LoginPage();
-                          }
-                      ));
-                    },
                   ),
-                ),
-                Divider(thickness: 0.5, height: 1, color: Colors.grey),
-              ],
+
+                ],
+              ),
             ),
           ),
         ),
@@ -306,7 +332,8 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          backgroundColor: Color(0xFFFEF5ED),
+          selectedItemColor: Color(0xFF685F53),
           unselectedItemColor: Colors.grey,
           unselectedLabelStyle: TextStyle(
               fontSize: 10,

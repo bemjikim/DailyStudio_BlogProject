@@ -31,62 +31,76 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          children: <Widget>[
-            const SizedBox(height: 80.0),
-            Column(
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/login.png'),
+              fit:BoxFit.cover,
+            ),
+          ),
+
+
+
+
+          child: SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               children: <Widget>[
-                Image.asset('assets/diamond.png'),
-                const SizedBox(height: 16.0),
-                const Text('SHRINE'),
-              ],
-            ),
-            const SizedBox(height: 120.0),
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                filled: true,
-                labelText: 'Username',
-              ),
-            ),
-            const SizedBox(height: 12.0),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                filled: true,
-                labelText: 'Password',
-              ),
-              obscureText: true,
-            ),
-            OverflowBar(
-              alignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                TextButton(
-                  child: const Text('Sign Up'),
-                  style: TextButton.styleFrom(
-                      primary: Colors.black
+
+
+                const SizedBox(height: 450.0),
+                Container(
+                  height: 54,
+                  child: TextField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Username',
+                      fillColor: Color(0xFFF4EBE4),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,// Set the desired circular radius here
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    Navigator.push( context, MaterialPageRoute(
-                        builder: (context){
-                          return SignUpPage();
-                        }
-                    ));
-                  },
                 ),
+                const SizedBox(height: 6.0),
+                Container(
+                  height: 54,
+                  child: TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Password',
+                      fillColor: Color(0xFFF4EBE4),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,// Set the desired circular radius here
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+
+                SizedBox(height: 18),
                 ElevatedButton(
                   child: const Text(
-                    'Log in',
+                    '로그인',
                     style: TextStyle(
-                        color: Colors.black
+                        color: Color(0xFF60544B),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.white60,
-                      minimumSize: const Size(80, 34)
+                      primary:  Color(0xFFE3CFB8),
+                      minimumSize: const Size(360, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                      ),
+
                   ),
                   onPressed: () async {
                     final uid = _usernameController.text;
@@ -126,9 +140,33 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                 ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('계정이 없으신가요?   '),
+                    TextButton(
+                      child: const Text('회원가입',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold, // Set the desired font weight here
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                          primary: Color(0xFFED9B21),
+                      ),
+                      onPressed: () {
+                        Navigator.push( context, MaterialPageRoute(
+                            builder: (context){
+                              return SignUpPage();
+                            }
+                        ));
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

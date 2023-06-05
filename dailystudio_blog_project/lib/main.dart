@@ -11,21 +11,39 @@ void main() async{
   runApp(const MyApp());
 }
 
+// class MyApp extends StatelessWidget {
+//   const MyApp({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//         title: 'Namer App',
+//         theme: ThemeData(
+//           useMaterial3: true,
+//           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+//         ),
+//         home: DailyStudioBlog(),
+//       );
+//   }
+// }
+
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider(
       create: (context) => CurrentUserModel(),
       child: MaterialApp(
-          title: 'Namer App',
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          ),
-          home: DailyStudioBlog(),
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         ),
+        home: DailyStudioBlog(),
+      ),
     );
   }
 }

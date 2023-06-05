@@ -103,11 +103,12 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
     final List<ImageLabel> imageLabels = await imageLabeler.processImage(inputImage);
     setState(() {
       labels = imageLabels;
+      for (var label in labels) {
+        scannedText += '#'+ label.label + ' ';
+      }
     });
 
-    for (var label in labels) {
-      scannedText += '#'+ label.label + ' ';
-    }
+
   }
 
   void _handleCreateButtonPressed() {
@@ -162,23 +163,28 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(0xFFFEF5ED),
+          elevation: 1,
           title: Text(
              years + "." + month + "." + day,
             style: TextStyle(
               fontSize: 20,
-              color: Colors.white,
+              color: Color(0xFF72614E),
+              fontWeight: FontWeight.w600,
             ),
           ),
 
           leading: _pageState == DetailPageState.normal
               ? IconButton(
-            icon: Icon(Icons.arrow_back_ios_new),
+            icon: Icon(Icons.arrow_back_ios_new,
+                color: Color(0xFF72614E)),
             onPressed: () {
               Navigator.pop(context);
             },
           )
               : IconButton(
-            icon: Icon(Icons.cancel),
+            icon: Icon(Icons.arrow_back_ios_new,
+                color: Color(0xFF72614E)),
             onPressed: () {
               setState(() {
                 _titleController.text = data['Title'];
@@ -196,7 +202,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                 icon: const Icon(
                   Icons.create,
                   semanticLabel: 'modifed',
-                  color: Colors.white,
+                  color: Color(0xFF72614E),
                 ),
                 onPressed: _handleCreateButtonPressed,
               ),
@@ -205,7 +211,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                 icon: const Icon(
                   Icons.delete,
                   semanticLabel: 'delete',
-                  color: Colors.white,
+                  color: Color(0xFF72614E),
                 ),
                 onPressed: () async{
                   await FirebaseFirestore.instance
@@ -308,55 +314,48 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                     );
                   }
                 },
-                child: Text('Save'),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Text('Save',
+                  style: TextStyle(
+                    fontSize: 18
+                  ),),
+                ),
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                  foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF443C34)),
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
                 ),
               ),
           ],
           centerTitle: true,
-          backgroundColor: Colors.grey,
-        ),
-        body: isLoading
-            ? Center(child: CircularProgressIndicator())
-            :SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          reverse: true,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: _pageState == DetailPageState.normal?Row(
-                  children: [
-                    Container(
-                      height: 35,
-                      width: 35,
-                      child: IconButton(
-                        onPressed: ()async{
-                          if(data['favorite'] == false)
-                          try {
-                            await FirebaseFirestore.instance
-                                .collection('user')
-                                .doc(cn!.name)
-                                .collection('post')
-                                .doc(years)
-                                .collection('month')
-                                .doc(month)
-                                .collection('posted')
-                                .doc(id).update({
-                              'favorite' : true,
-                            });
-                            setState(() {
-                              i = 0;
-                            });
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
-                          }
 
-                          if(data['favorite'] == true)
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/background.png'), // Replace 'assets/a.png' with the path to your image
+              fit: BoxFit.cover,
+            ),
+          ),
+
+
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              :SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            reverse: true,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+                  child: _pageState == DetailPageState.normal?Row(
+                    children: [
+                      Container(
+                        height: 35,
+                        width: 35,
+                        child: IconButton(
+                          onPressed: ()async{
+                            if(data['favorite'] == false)
                             try {
                               await FirebaseFirestore.instance
                                   .collection('user')
@@ -367,7 +366,21 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                                   .doc(month)
                                   .collection('posted')
                                   .doc(id).update({
-                              'favorite' : false,
+                                'favorite' : true,
+                              });
+                              await FirebaseFirestore.instance
+                                  .collection('user')
+                                  .doc(cn!.name)
+                                  .collection('favorite')
+                                  .doc(id).set({
+                                'IMAGE': data['IMAGE'],
+                                'Title':  data['Title'],
+                                'Content':  data['Content'],
+                                'favorite':  true,
+                                'year' :  data['year'],
+                                'month' :  data['month'],
+                                'day' :  data['day'],
+                                'wholeday' : int.parse(data['wholeday']),
                               });
                               setState(() {
                                 i = 0;
@@ -377,118 +390,162 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                                 SnackBar(content: Text(e.toString())),
                               );
                             }
-                        },
-                        icon: data['favorite']==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
-                        iconSize: 20,
+
+                            if(data['favorite'] == true)
+                              try {
+                                await FirebaseFirestore.instance
+                                    .collection('user')
+                                    .doc(cn!.name)
+                                    .collection('post')
+                                    .doc(years)
+                                    .collection('month')
+                                    .doc(month)
+                                    .collection('posted')
+                                    .doc(id).update({
+                                'favorite' : false,
+                                });
+                                setState(() {
+                                  i = 0;
+                                });
+                                await FirebaseFirestore.instance
+                                    .collection('user')
+                                    .doc(cn!.name)
+                                    .collection('favorite')
+                                    .doc(id).delete();
+                                setState(() {
+                                });
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())),
+                                );
+                              }
+                          },
+                          icon: data['favorite']==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
+                          iconSize: 28,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8, left: 8),
+                        child: Text(
+                            data['Title'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+
+                            ),
+                        ),
+                      ),
+                    ],
+                  ):
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: Container(
+                      width: 370,
+                      child: TextFormField(
+                        controller: _titleController,
+                        maxLines: 1,
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(
+                              color: Color(0xFFFEF5ED),
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Color(0xFFFEF5ED),
+                        ),
                       ),
                     ),
-                    Text(
-                        data['Title'],
-                    ),
-                  ],
-                ):Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: Container(
-                    width: 350,
-                    child: TextFormField(
-                      controller: _titleController,
-                      maxLines: 3,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(
-                            color: Colors.purpleAccent,
+                  ),
+                ),
+                InkWell(
+                  onDoubleTap: () {
+                    setState(() {
+                    });
+                  },
+                  child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child:_isImage?Image.file(
+                            File(_image!.path),
+                            height: 250.0,
+                            width: 370.0,
+                            fit: BoxFit.fill,
+                          ):Image.network(
+                            data['IMAGE'],
+                            height: 250,
+                            width: 370,
+                            fit: BoxFit.fill,
                           ),
                         ),
-                        filled: true,
-                        fillColor: Colors.blue,
                       ),
-                    ),
-                  ),
                 ),
-              ),
-              InkWell(
-                onDoubleTap: () {
-                  setState(() {
-                  });
-                },
-                child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child:_isImage?Image.file(
-                        File(_image!.path),
-                        height: 250.0,
-                        width: 350.0,
-                        fit: BoxFit.fill,
-                      ):Image.network(
-                        data['IMAGE'],
-                        height: 250,
-                        width: 350,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-              ),
-              if (_pageState == DetailPageState.creating)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(330, 0, 0, 0),
-                  child: IconButton(
-                    icon: Icon(
-                        Icons.camera_alt
-                    ),
-                    onPressed: (){
-                      getImage();
-                    },
-                  ),
-                ),
-              _pageState == DetailPageState.normal?Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 348,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                        width: 1,
-                        color: Colors.orange,
-                        ),
-                        ),
-                      child: Text(
-                        data['Content'],
-                      ),
-                    ),
-                    Container(
-                      width: 348,
-                      decoration: BoxDecoration(
-                        border: Border.all(
+                SizedBox(height: 20,),
+                _pageState == DetailPageState.normal?Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 348,
+                        decoration: BoxDecoration(
+                          border: Border.all(
                           width: 1,
-                          color: Colors.orange,
+                          color: Colors.transparent,
+                          ),
+                          ),
+                        child: Text(
+                          data['Content'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      child: Text(
-                        data['tag'],
+                      SizedBox(height: 20,),
+                      Container(
+                        width: 348,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        child: Text(
+                          data['tag'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ):Container(
-                width: 348,
-                child: TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 10, // 최대 라인수
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      borderSide: BorderSide(
-                        color: Colors.purpleAccent,
+                    ],
+                  ),
+                ):Container(
+                  width: 368,
+                  child: TextFormField(
+                    controller: _descriptionController,
+                    maxLines: 10, // 최대 라인수
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEDE2D9),
+                        ),
                       ),
+                      filled: true,
+                      fillColor: Color(0xFFFEF5ED),
                     ),
-                    filled: true,
-                    fillColor: Colors.blue,
                   ),
                 ),
-              ),
-            ],
+                if( _pageState == DetailPageState.normal)
+                SizedBox(height: 160,)
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -512,7 +569,8 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          backgroundColor: Color(0xFFFEF5ED),
+          selectedItemColor: Color(0xFF685F53),
           unselectedItemColor: Colors.grey,
           unselectedLabelStyle: TextStyle(
               fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),

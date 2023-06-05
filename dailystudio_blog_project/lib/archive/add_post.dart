@@ -38,8 +38,8 @@ class _AddPostState extends State<AddPost> {
     final ImageLabeler imageLabeler = GoogleMlKit.vision.imageLabeler();
 
     setState(() {
-        _image = image!;
-      });
+      _image = image!;
+    });
 
     if (_image != null) {
       setState(() {
@@ -126,26 +126,37 @@ class _AddPostState extends State<AddPost> {
       home: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.grey,
+            backgroundColor: Color(0xFFFEF5ED),
+            elevation: 1,
             leading: Expanded(
-              child: IconButton(
-                icon: Icon(Icons.arrow_back_ios_new),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios_new,
+                      color: Color(0xFF72614E)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
             ),
             title: Center(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 50.0, 0.0),
                 child: const Text(
                   '기록 남기기',
-                  style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                        color: Color(0xFF72614E),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20),
                 ),
               ),
             ),
           ),
           body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/background.png'), // Replace 'assets/a.png' with the path to your image
+                fit: BoxFit.cover,
+              ),
+            ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               reverse: true,
@@ -157,10 +168,10 @@ class _AddPostState extends State<AddPost> {
                       child: Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
-                            child: IconButton
-                              (
-                              icon: Icon(Icons.calendar_today_outlined),
+                            padding: const EdgeInsets.fromLTRB(14, 10, 0, 10),
+                            child: IconButton(
+                              icon: Icon(Icons.calendar_today_outlined,
+                              size: 26,),
                               onPressed: () async {
                                 final selectedDate = await showDatePicker(
                                   context: context,
@@ -176,8 +187,13 @@ class _AddPostState extends State<AddPost> {
                               },
                             ),
                           ),
+                          SizedBox(width: 4),
                           Text(
-                              "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
+                            "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
+                            style: TextStyle(
+                              fontSize: 18, // Adjust the font size as desired
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -188,109 +204,117 @@ class _AddPostState extends State<AddPost> {
                       _isLoading ? new CircularProgressIndicator() : null,
                     ),
                     Container(
-                      height: 460,
-                      width: 370,
-                      decoration: BoxDecoration(
+                        height: 426,
+                        width: 370,
+                        decoration: BoxDecoration(
                           border: Border.all(
                             width: 1,
-                            color: Colors.orange,
+                            color: Color(0xFFBABABA),
                           ),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              controller: _title,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15.0,
-                              ),
-                              onChanged: (String text) {
-                                setState(() {
-                                  _isTitle = text.length > 0;
-                                });
-                              },
-                              decoration: InputDecoration.collapsed(
-                                hintText: "제목",
-                                border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: TextField(
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                controller: _title,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+
+                                ),
+                                onChanged: (String text) {
+                                  setState(() {
+                                    _isTitle = text.length > 0;
+                                  });
+                                },
+                                decoration: InputDecoration.collapsed(
+                                  hintText: "제목",
+                                  border: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFF72614E),
                                       style: BorderStyle.solid,
                                       width: 5.0,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+                            SizedBox(height: 50,),
+                            InkWell(
+                              child: _image == null
+                                  ? Image.asset(
+                                "assets/camera.png",
+                                height: 40.0,
+                                width: 100.0,
 
-                          InkWell(
-                            child: _image == null
-                                ?  Image.network(
-                              "https://firebasestorage.googleapis.com/v0/b/dailyblogproject-e323c.appspot.com/o/post%2F%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.png?alt=media&token=fdbd13ff-bec6-4615-ae91-20410ff83a8a",
-                              height: 200.0,
-                              width: 370.0,
-                              fit: BoxFit.fill,
-                            )
-                                : Image.file(
-                              File(_image!.path),
-                              height: 200.0,
-                              width: 370.0,
-                              fit: BoxFit.fill,
-                            ),
-                            onTap: () {
-                              getImage();
-                            },
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              controller: _content,
-                              style: TextStyle(color: Colors.black, fontSize: 15.0),
-                              onChanged: (String text) {
-                                setState(() {
-                                  _isContent = text.length > 0;
-                                });
+                              )
+                                  : Image.file(
+                                File(_image!.path),
+                                height: 100.0,
+                                width: 320.0,
+                                fit: BoxFit.fill,
+                              ),
+                              onTap: () {
+                                getImage();
                               },
-                              decoration: InputDecoration.collapsed(
-                                hintText: "내용",
-                                border: UnderlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    color: Colors.black54,
-                                    style: BorderStyle.solid,
-                                    width: 5.0,
+                            ),
+                            SizedBox(height: 50,),
+
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: TextField(
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                controller: _content,
+                                style: TextStyle(color: Colors.black,
+                                    fontSize: 18.0),
+                                onChanged: (String text) {
+                                  setState(() {
+                                    _isContent = text.length > 0;
+                                  });
+                                },
+                                decoration: InputDecoration.collapsed(
+                                  hintText: "내용",
+                                  border: UnderlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFF72614E),
+                                      style: BorderStyle.solid,
+                                      width: 5.0,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      )
+                          ],
+                        )
                     ),
-
+                    SizedBox(height: 14,),
                     ElevatedButton(
-                      child: const Text(
-                        '기록 인화하기',
-                        style: TextStyle(
-                            color: Colors.black
+                        child: const Text(
+                          '기록 인화하기',
+                          style: TextStyle(
+                              color: Color(0xFF72614E),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17),
                         ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.white60,
-                          minimumSize: const Size(370, 34)
-                      ),
-                      onPressed: (){
-                        if(_isTitle && _isContent && !_isLoading &&_image != null)
+                        style: ElevatedButton.styleFrom(
+                          primary:  Color(0xFFE3CFB8),
+                          minimumSize: const Size(370, 46),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                          ),
+                        ),
+                        onPressed: (){
+                          if(_isTitle && _isContent && !_isLoading &&_image != null)
                           {
                             _handleSubmitted(_title.text,
                                 _content.text, File(_image!.path), cn!.name);
                           }
-                        else
+                          else
                           {
                             showDialog(
                               context: context,
@@ -312,8 +336,9 @@ class _AddPostState extends State<AddPost> {
                               },
                             );
                           }
-                      }
+                        }
                     ),
+                    SizedBox(height: 16,),
                   ],
                 ),
               ),
@@ -340,7 +365,9 @@ class _AddPostState extends State<AddPost> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.amber[800],
+            backgroundColor: Color(0xFFFEF5ED),
+            selectedItemColor: Color(0xFF685F53),
+
             unselectedItemColor: Colors.grey,
             unselectedLabelStyle: TextStyle(
                 fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
@@ -428,4 +455,3 @@ class _AddPostState extends State<AddPost> {
 
   }
 }
-
