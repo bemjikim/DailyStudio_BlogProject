@@ -103,11 +103,12 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
     final List<ImageLabel> imageLabels = await imageLabeler.processImage(inputImage);
     setState(() {
       labels = imageLabels;
+      for (var label in labels) {
+        scannedText += '#'+ label.label + ' ';
+      }
     });
 
-    for (var label in labels) {
-      scannedText += '#'+ label.label + ' ';
-    }
+
   }
 
   void _handleCreateButtonPressed() {
