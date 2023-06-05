@@ -255,7 +255,7 @@ class _AddPostState extends State<AddPost> {
                                   : Image.file(
                                 File(_image!.path),
                                 height: 100.0,
-                                width: 185.0,
+                                width: 320.0,
                                 fit: BoxFit.fill,
                               ),
                               onTap: () {

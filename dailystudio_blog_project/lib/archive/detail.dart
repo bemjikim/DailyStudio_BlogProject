@@ -182,7 +182,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
             },
           )
               : IconButton(
-            icon: Icon(Icons.cancel,
+            icon: Icon(Icons.arrow_back_ios_new,
                 color: Color(0xFF72614E)),
             onPressed: () {
               setState(() {
@@ -314,7 +314,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 6.0),
+                  padding: const EdgeInsets.only(right: 10.0),
                   child: Text('Save',
                   style: TextStyle(
                     fontSize: 18
@@ -367,6 +367,20 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                                   .doc(id).update({
                                 'favorite' : true,
                               });
+                              await FirebaseFirestore.instance
+                                  .collection('user')
+                                  .doc(cn!.name)
+                                  .collection('favorite')
+                                  .doc(id).set({
+                                'IMAGE': data['IMAGE'],
+                                'Title':  data['Title'],
+                                'Content':  data['Content'],
+                                'favorite':  true,
+                                'year' :  data['year'],
+                                'month' :  data['month'],
+                                'day' :  data['day'],
+                                'wholeday' : int.parse(data['wholeday']),
+                              });
                               setState(() {
                                 i = 0;
                               });
@@ -391,6 +405,13 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                                 });
                                 setState(() {
                                   i = 0;
+                                });
+                                await FirebaseFirestore.instance
+                                    .collection('user')
+                                    .doc(cn!.name)
+                                    .collection('favorite')
+                                    .doc(id).delete();
+                                setState(() {
                                 });
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -421,7 +442,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                       width: 370,
                       child: TextFormField(
                         controller: _titleController,
-                        maxLines: 3,
+                        maxLines: 1,
                         keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -443,7 +464,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                     });
                   },
                   child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child:_isImage?Image.file(
@@ -460,19 +481,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         ),
                       ),
                 ),
-                if (_pageState == DetailPageState.creating)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(330, 0, 0, 0),
-                    child: IconButton(
-                      icon: Icon(
-                          Icons.camera_alt,
-                          color: Color(0xFFFEF5ED),
-                      ),
-                      onPressed: (){
-                        getImage();
-                      },
-                    ),
-                  ),
+                SizedBox(height: 20,),
                 _pageState == DetailPageState.normal?Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -532,7 +541,8 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30,)
+                if( _pageState == DetailPageState.normal)
+                SizedBox(height: 160,)
               ],
             ),
           ),

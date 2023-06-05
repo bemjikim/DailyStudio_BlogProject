@@ -295,8 +295,9 @@ class _SettingPageState extends State<SettingPage> {
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
                         ),
                       ),
-                      onPressed: () {
-                        currentUserProvider.removeUser(cn!);
+                      onPressed: () async{
+                        var name = CurrentUser(name: cn!.name);
+                        currentUserProvider.removeUser(name);
                         Navigator.push( context, MaterialPageRoute(
                             builder: (context){
                               return LoginPage();

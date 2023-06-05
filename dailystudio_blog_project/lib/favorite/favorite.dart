@@ -130,50 +130,14 @@ class _FavoritePageState extends State<FavoritePage> {
                                 width: 35,
                                 child: IconButton(
                                   onPressed: ()async{
-                                    if(yearCollection.get('favorite') == false)
                                       try {
                                         await FirebaseFirestore.instance
                                             .collection('user')
                                             .doc(cn!.name)
                                             .collection('post')
-                                            .doc(yearCollection.get('year'))
+                                            .doc(yearCollection.get('year').toString())
                                             .collection('month')
-                                            .doc(yearCollection.get('month'))
-                                            .collection('posted')
-                                            .doc(yearCollection.id).update({
-                                          'favorite' : true,
-                                        });
-                                        await FirebaseFirestore.instance
-                                            .collection('user')
-                                            .doc(cn!.name)
-                                            .collection('favorite')
-                                            .doc(yearCollection.id).set({
-                                          'IMAGE': yearCollection.get('IMAGE'),
-                                          'Title':  yearCollection.get('Title'),
-                                          'Content':  yearCollection.get('Content'),
-                                          'favorite':  true,
-                                          'year' :  yearCollection.get('year'),
-                                          'month' :  yearCollection.get('month'),
-                                          'day' :  yearCollection.get('day'),
-                                          'wholeday' : int.parse(yearCollection.get('wholeday')),
-                                        });
-                                        setState(() {
-                                        });
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text(e.toString())),
-                                        );
-                                      }
-
-                                    if(yearCollection.get('favorite') == true)
-                                      try {
-                                        await FirebaseFirestore.instance
-                                            .collection('user')
-                                            .doc(cn!.name)
-                                            .collection('post')
-                                            .doc(yearCollection.get('year'))
-                                            .collection('month')
-                                            .doc(yearCollection.get('month'))
+                                            .doc(yearCollection.get('month').toString())
                                             .collection('posted')
                                             .doc(yearCollection.id).update({
                                           'favorite' : false,
@@ -182,8 +146,11 @@ class _FavoritePageState extends State<FavoritePage> {
                                             .collection('user')
                                             .doc(cn!.name)
                                             .collection('favorite')
-                                            .doc(yearCollection.id).delete();
+                                            .doc(yearCollection.get('Title')).delete();
                                         setState(() {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                            return FavoritePage();
+                                          }));
                                         });
                                       } catch (e) {
                                         ScaffoldMessenger.of(context).showSnackBar(
