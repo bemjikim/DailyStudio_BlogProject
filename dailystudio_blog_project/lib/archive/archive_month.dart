@@ -250,7 +250,7 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(17.0, 11, 0, 0),
                                 child: Text(
-                                  yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString() + '.' + yearCollection.get('day').toString(),
+                                  yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString().padLeft(2, '0') + '.' + yearCollection.get('day').toString().padLeft(2, '0'),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,

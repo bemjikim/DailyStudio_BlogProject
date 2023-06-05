@@ -166,7 +166,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
           backgroundColor: Color(0xFFFEF5ED),
           elevation: 1,
           title: Text(
-             years + "." + month + "." + day,
+             years + "." + month.toString().padLeft(2, '0') + "." + day.toString().padLeft(2, '0'),
             style: TextStyle(
               fontSize: 20,
               color: Color(0xFF72614E),
@@ -301,11 +301,24 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         'Title': _titleController.text,
                         'Content': _descriptionController.text,
                         'IMAGE': downloadUrl,
-                        'tag': scannedText,
+                        if(_isImage)
+                        'tag': scannedText.toLowerCase(),
                     });
-
+                    if(data['favorite'] == true)
+                      {
+                        FirebaseFirestore.instance
+                            .collection('user')
+                            .doc(cn!.name)
+                            .collection('favorite')
+                            .doc(id).update({
+                          'Title': _titleController.text,
+                          'Content': _descriptionController.text,
+                          'IMAGE': downloadUrl,
+                        });
+                      }
                     setState(() {
                       i = 0;
+                      _isImage = false;
                       _pageState = DetailPageState.normal;
                     });
                   } catch (e) {
@@ -381,6 +394,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                                 'month' :  data['month'],
                                 'day' :  data['day'],
                                 'wholeday' : int.parse(data['wholeday']),
+                                'uid' : id,
                               });
                               setState(() {
                                 i = 0;
@@ -468,16 +482,21 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child:_isImage?Image.file(
-                            File(_image!.path),
-                            height: 250.0,
-                            width: 370.0,
-                            fit: BoxFit.fill,
+                          child:_isImage?InkWell(
+                            onTap: (){
+                              getImage();
+                            },
+                            child: Image.file(
+                              File(_image!.path),
+                              height: 250.0,
+                              width: 370.0,
+                              fit: BoxFit.fill,
+                            ),
                           ):Image.network(
-                            data['IMAGE'],
-                            height: 250,
-                            width: 370,
-                            fit: BoxFit.fill,
+                              data['IMAGE'],
+                              height: 250,
+                              width: 370,
+                              fit: BoxFit.fill,
                           ),
                         ),
                       ),

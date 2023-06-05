@@ -389,7 +389,7 @@ class _AddPostState extends State<AddPost> {
     final postRef = FirebaseFirestore.instance.collection('user').doc(name);
     final postYear = postRef.collection('post').doc(date.year.toString());
     final postMonth = postYear.collection('month').doc(date.month.toString());
-    final posted = postMonth.collection('posted').doc(title);
+    final posted = postMonth.collection('posted').doc(DateTime.now().toString());
     if(_image == null){
       postYear.set({
         'make' : 1,
@@ -407,7 +407,7 @@ class _AddPostState extends State<AddPost> {
         'year' : date.year,
         'month' : date.month,
         'day' : date.day,
-        'tag': scannedText,
+        'tag': scannedText.toLowerCase(),
         'wholeday' : date.year.toString() +  date.month.toString()  + date.day.toString(),
         'createdTime': FieldValue.serverTimestamp(),
         'modifiedTime': FieldValue.serverTimestamp(),
@@ -441,7 +441,7 @@ class _AddPostState extends State<AddPost> {
           'year' : date.year,
           'month' : date.month,
           'day' : date.day,
-          'tag': scannedText,
+          'tag': scannedText.toLowerCase(),
           'wholeday' : date.year.toString()  + date.month.toString()  + date.day.toString(),
           'createdTime': FieldValue.serverTimestamp(),
           'modifiedTime': FieldValue.serverTimestamp(),

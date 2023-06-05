@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dailystudio_blog_project/archive/archive_main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,6 +26,7 @@ class SearchPageState extends State<SearchPage> {
   late DocumentSnapshot productSnapshot;
   int _selectedIndex = 2;
   bool _isTitle = false;
+  String search = "";
   TextEditingController _searchController = TextEditingController(); // 검색어를 입력받는 컨트롤러
   List<DocumentSnapshot> _searchResults = []; // 검색 결과를 저장하는 리스트
 
@@ -54,6 +56,11 @@ class SearchPageState extends State<SearchPage> {
           return FavoritePage();
         }));
       }
+      if (_selectedIndex == 2) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ArchiveMain();
+        }));
+      }
       if (_selectedIndex == 3) {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SettingPage();
@@ -63,48 +70,11 @@ class SearchPageState extends State<SearchPage> {
     });
   }
 
-  void _search(String name, String text) async{
-    String searchTerm = _searchController.text; // 검색어 가져오기
-    List<DocumentSnapshot> allResults = []; // 전체 데이터에서 검색 결과를 저장할 리스트
-
-    final postRef = await FirebaseFirestore.instance.collection('user').doc(name);
-    print("This is result!!");
-
-      setState(() {
-        postRef.collection('post').get().then((QuerySnapshot snapshot) {
-          // 전체 데이터를 가져옴
-          snapshot.docs.forEach((DocumentSnapshot yearCollection) {
-            yearCollection.reference.collection('month').get().then((QuerySnapshot snapshot) {
-              snapshot.docs.forEach((DocumentSnapshot monthDoc) {
-                monthDoc.reference.collection('posted').orderBy('wholeday').get().then((QuerySnapshot snapshot) {
-                  snapshot.docs.forEach((DocumentSnapshot productSnapshot) {
-                    // 검색어와 비교하여 일치하는 경우 결과에 추가
-                    String result = productSnapshot['tag'];
-                    print("This is result!!" + result);
-                    print('text:' + text);
-                    if(result.contains(searchTerm))
-                    {
-                      allResults.add(productSnapshot);
-                      print("get!!!!");
-                      print(allResults.length);
-                    }
-                  });
-                });
-              });
-            });
-          });
-        });
-        _searchResults = allResults; // 검색 결과를 저장
-        _isSearch = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentUserProvider = Provider.of<CurrentUserModel>(context);
     final currentUsers = currentUserProvider.currentUsers;
     var cn = currentUsers.isNotEmpty ? currentUsers[0] : null;
-    final postRef = FirebaseFirestore.instance.collection('user').doc(cn!.name);
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -117,7 +87,7 @@ class SearchPageState extends State<SearchPage> {
                     color: Color(0xFF72614E)),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return HomePage();
+                    return ArchiveMain();
                   }));
                 },
               ),
@@ -159,245 +129,17 @@ class SearchPageState extends State<SearchPage> {
                       IconButton(
                           icon: Icon(Icons.search,
                               color: Color(0xFF72614E)),
-                          onPressed:(){
-                            _search(cn!.name, _searchController.text);
+                          onPressed:()async{
+                            setState(() {
+                              search = _searchController.text;
+                            });
                           }
                       ),
                     ],
                   ),
                 ),
-                if(!_isSearch || _searchController.text.length == 0)
-                  ListTile(
-                    title: Text(
-                      "검색을 해주세요",
-                      style: TextStyle (
-                        fontWeight: FontWeight.w400
-                      ),
-                    ),
-                  ),
-                if(_isSearch && _searchController.text.length > 0)
                   Expanded(
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: postRef.collection('post').snapshots(),
-                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
-                        final yearCollections = snapshot.data?.docs ?? [];
-                        if (yearCollections.length == 0) {
-                          return Center(
-                            child: Text("There is no data"),
-                          );
-                        }
-
-                        List<DocumentSnapshot> displayedResults = _searchResults;
-
-                        return ListView.builder(
-                          itemCount: yearCollections.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final yearCollection = yearCollections[index];
-
-                            // Extract the names of subcollections
-                            return StreamBuilder<QuerySnapshot>(
-                              stream: yearCollection.reference.collection('month').snapshots(),
-                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Error: ${snapshot.error}');
-                                }
-
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return CircularProgressIndicator();
-                                }
-
-                                final monthDocs = snapshot.data?.docs ?? [];
-                                if (monthDocs.isEmpty) {
-                                  return Text("There is no data");
-                                }
-
-                                return ListView.builder(
-                                  // 스크롤 동작 비활성화
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: monthDocs.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    final month = monthDocs[index].id;
-
-                                    return StreamBuilder<QuerySnapshot>(
-                                      stream: yearCollection.reference
-                                          .collection('month')
-                                          .doc(month)
-                                          .collection('posted')
-                                          .orderBy('day')
-                                          .snapshots(),
-                                      builder:
-                                          (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                        if (snapshot.hasError) {
-                                          return Text('Error: ${snapshot.error}');
-                                        }
-
-                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        }
-
-                                        final productSnapshots = snapshot.data?.docs ?? [];
-                                        if (productSnapshots.isEmpty) {
-                                          return SizedBox(); // 빈 컨테이너 또는 로딩 상태를 보여줄 위젯을 반환합니다.
-                                        }
-
-                                        return ListView.builder(
-                                          // 스크롤 동작 비활성화
-                                          shrinkWrap: true,
-                                          physics: NeverScrollableScrollPhysics(),
-                                          itemCount: productSnapshots.length,
-                                          itemBuilder: (BuildContext context, int index) {
-                                            final productSnapshot = productSnapshots[index];
-                                            if(productSnapshot['tag'].toLowerCase().contains(_searchController.text))
-                                            return Column(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.fromLTRB(20.0, 5, 0, 0),
-                                                  child: Container(
-                                                    width: 600,
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          height: 35,
-                                                          width: 35,
-                                                          child: IconButton(
-                                                            onPressed: () async {
-                                                              if (productSnapshot['favorite'] == false)
-                                                                try {
-                                                                  await FirebaseFirestore.instance
-                                                                      .collection('user')
-                                                                      .doc(cn!.name)
-                                                                      .collection('post')
-                                                                      .doc(yearCollection.id)
-                                                                      .collection('month')
-                                                                      .doc(month)
-                                                                      .collection('posted')
-                                                                      .doc(productSnapshot.id)
-                                                                      .update({
-                                                                    'favorite': true,
-                                                                  });
-                                                                  await FirebaseFirestore.instance
-                                                                      .collection('user')
-                                                                      .doc(cn!.name)
-                                                                      .collection('favorite')
-                                                                      .doc(productSnapshot.id)
-                                                                      .set({
-                                                                    'IMAGE': productSnapshot['IMAGE'],
-                                                                    'Title': productSnapshot['Title'],
-                                                                    'Content': productSnapshot['Content'],
-                                                                    'favorite': true,
-                                                                    'year': productSnapshot['year'],
-                                                                    'month': productSnapshot['month'],
-                                                                    'day': productSnapshot['day'],
-                                                                    'wholeday': int.parse(
-                                                                        productSnapshot['wholeday']),
-                                                                  });
-                                                                  setState(() {});
-                                                                } catch (e) {
-                                                                  ScaffoldMessenger.of(context)
-                                                                      .showSnackBar(
-                                                                    SnackBar(content: Text(e.toString())),
-                                                                  );
-                                                                }
-
-                                                              if (productSnapshot['favorite'] == true)
-                                                                try {
-                                                                  await FirebaseFirestore.instance
-                                                                      .collection('user')
-                                                                      .doc(cn!.name)
-                                                                      .collection('post')
-                                                                      .doc(yearCollection.id)
-                                                                      .collection('month')
-                                                                      .doc(month)
-                                                                      .collection('posted')
-                                                                      .doc(productSnapshot.id)
-                                                                      .update({
-                                                                    'favorite': false,
-                                                                  });
-                                                                  await FirebaseFirestore.instance
-                                                                      .collection('user')
-                                                                      .doc(cn!.name)
-                                                                      .collection('favorite')
-                                                                      .doc(productSnapshot.id)
-                                                                      .delete();
-                                                                  setState(() {});
-                                                                } catch (e) {
-                                                                  ScaffoldMessenger.of(context)
-                                                                      .showSnackBar(
-                                                                    SnackBar(content: Text(e.toString())),
-                                                                  );
-                                                                }
-                                                            },
-                                                            icon: productSnapshot['favorite'] == true
-                                                                ? Icon(Icons.star)
-                                                                : Icon(Icons.star_border_outlined),
-                                                            iconSize: 20,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          productSnapshot['Title'].toString(),
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: 20,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
-                                                  child: Stack(children: [
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                          return ArchiveDetail(detailed: productSnapshot.id + "/" + productSnapshot['year'].toString() + "/" + productSnapshot['month'].toString() + "/" + productSnapshot['day'].toString());
-                                                        }));
-                                                      },
-                                                      child: Image.network(
-                                                        productSnapshot['IMAGE'],
-                                                        height: 200.0,
-                                                        width: 350.0,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 0),
-                                                      child: Text(
-                                                        productSnapshot['year'].toString() +
-                                                            '.' +
-                                                            productSnapshot['month'].toString() +
-                                                            '.' +
-                                                            productSnapshot['day'].toString(),
-                                                        style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 20,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ]),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    child:showBody()
                   ),
               ],
             ),
@@ -433,6 +175,239 @@ class SearchPageState extends State<SearchPage> {
           ),
         ),
       ),
+    );
+  }
+
+  showBody() {
+    final currentUserProvider = Provider.of<CurrentUserModel>(context);
+    final currentUsers = currentUserProvider.currentUsers;
+    var cn = currentUsers.isNotEmpty ? currentUsers[0] : null;
+    final postRef = FirebaseFirestore.instance.collection('user').doc(cn!.name);
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: postRef.collection('post').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        final yearCollections = snapshot.data?.docs ?? [];
+        if (yearCollections.length == 0) {
+          return Center(
+            child: Text("There is no data"),
+          );
+        }
+
+        List<DocumentSnapshot> displayedResults = _searchResults;
+
+        return ListView.builder(
+          itemCount: yearCollections.length,
+          itemBuilder: (BuildContext context, int index) {
+            final yearCollection = yearCollections[index];
+
+            // Extract the names of subcollections
+            return StreamBuilder<QuerySnapshot>(
+              stream: yearCollection.reference.collection('month').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+
+                final monthDocs = snapshot.data?.docs ?? [];
+                if (monthDocs.isEmpty) {
+                  return Text("There is no data");
+                }
+
+                return ListView.builder(
+                  // 스크롤 동작 비활성화
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: monthDocs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final month = monthDocs[index].id;
+
+                    return StreamBuilder<QuerySnapshot>(
+                      stream: yearCollection.reference
+                          .collection('month')
+                          .doc(month)
+                          .collection('posted')
+                          .orderBy('wholeday')
+                          .snapshots(),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+
+                        final productSnapshots = snapshot.data?.docs ?? [];
+                        print(productSnapshots.length);
+                        final filteredSnapshots = productSnapshots.where((snapshot) => snapshot['tag'].toString().contains(_searchController.text)).toList();
+                        print(filteredSnapshots.length);
+                        if(_searchController.text.length == 0)
+                          {
+                            return Center(
+                              child: Text("There is no data."),
+                            );
+                          }
+                        return ListView.builder(
+                          // 스크롤 동작 비활성화
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: filteredSnapshots.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final productSnapshot = filteredSnapshots[index];
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(20.0, 5, 0, 0),
+                                    child: Container(
+                                      width: 600,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 35,
+                                            width: 35,
+                                            child: IconButton(
+                                              onPressed: () async {
+                                                if (productSnapshot['favorite'] == false)
+                                                  try {
+                                                    await FirebaseFirestore.instance
+                                                        .collection('user')
+                                                        .doc(cn!.name)
+                                                        .collection('post')
+                                                        .doc(yearCollection.id)
+                                                        .collection('month')
+                                                        .doc(month)
+                                                        .collection('posted')
+                                                        .doc(productSnapshot.id)
+                                                        .update({
+                                                      'favorite': true,
+                                                    });
+                                                    await FirebaseFirestore.instance
+                                                        .collection('user')
+                                                        .doc(cn!.name)
+                                                        .collection('favorite')
+                                                        .doc(productSnapshot.id)
+                                                        .set({
+                                                      'IMAGE': productSnapshot['IMAGE'],
+                                                      'Title': productSnapshot['Title'],
+                                                      'Content': productSnapshot['Content'],
+                                                      'favorite': true,
+                                                      'year': productSnapshot['year'],
+                                                      'month': productSnapshot['month'],
+                                                      'day': productSnapshot['day'],
+                                                      'wholeday': int.parse(
+                                                          productSnapshot['wholeday']),
+                                                    });
+                                                    setState(() {});
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(
+                                                      SnackBar(content: Text(e.toString())),
+                                                    );
+                                                  }
+
+                                                if (productSnapshot['favorite'] == true)
+                                                  try {
+                                                    await FirebaseFirestore.instance
+                                                        .collection('user')
+                                                        .doc(cn!.name)
+                                                        .collection('post')
+                                                        .doc(yearCollection.id)
+                                                        .collection('month')
+                                                        .doc(month)
+                                                        .collection('posted')
+                                                        .doc(productSnapshot.id)
+                                                        .update({
+                                                      'favorite': false,
+                                                    });
+                                                    await FirebaseFirestore.instance
+                                                        .collection('user')
+                                                        .doc(cn!.name)
+                                                        .collection('favorite')
+                                                        .doc(productSnapshot.id)
+                                                        .delete();
+                                                    setState(() {});
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(
+                                                      SnackBar(content: Text(e.toString())),
+                                                    );
+                                                  }
+                                              },
+                                              icon: productSnapshot['favorite'] == true
+                                                  ? Icon(Icons.star)
+                                                  : Icon(Icons.star_border_outlined),
+                                              iconSize: 20,
+                                            ),
+                                          ),
+                                          Text(
+                                            productSnapshot['Title'].toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
+                                    child: Stack(children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                            return ArchiveDetail(detailed: productSnapshot.id + "/" + productSnapshot['year'].toString() + "/" + productSnapshot['month'].toString() + "/" + productSnapshot['day'].toString());
+                                          }));
+                                        },
+                                        child: Image.network(
+                                          productSnapshot['IMAGE'],
+                                          height: 200.0,
+                                          width: 350.0,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 0),
+                                        child: Text(
+                                          productSnapshot['year'].toString() +
+                                              '.' +
+                                              productSnapshot['month'].toString().padLeft(2, '0') +
+                                              '.' +
+                                              productSnapshot['day'].toString().padLeft(2, '0'),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                  ),
+                                ],
+                              );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

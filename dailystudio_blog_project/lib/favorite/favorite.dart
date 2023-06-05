@@ -110,13 +110,15 @@ class _FavoritePageState extends State<FavoritePage> {
               }
 
               final yearCollections = snapshot.data?.docs ?? [];
-
+              if(yearCollections.isEmpty)
+                return Center(
+                  child: Text("There is a no data."),
+                );
               return ListView.builder(
                 itemCount: yearCollections.length,
                 itemBuilder: (BuildContext context, int index)  {
                   final yearCollection = yearCollections[index];
                   // Extract the names of subcollections
-
                   return Column(
                     children: [
                       Padding(
@@ -146,7 +148,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                             .collection('user')
                                             .doc(cn!.name)
                                             .collection('favorite')
-                                            .doc(yearCollection.get('Title')).delete();
+                                            .doc(yearCollection.id).delete();
                                         setState(() {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) {
                                             return FavoritePage();
@@ -201,7 +203,7 @@ class _FavoritePageState extends State<FavoritePage> {
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(17.0, 11, 0, 0),
                                 child: Text(
-                                  yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString() + '.' + yearCollection.get('day').toString(),
+                                  yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString().padLeft(2, '0') + '.' + yearCollection.get('day').toString().padLeft(2, '0'),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,

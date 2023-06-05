@@ -105,11 +105,11 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     final uid = _usernameController.text;
                     final password = _passwordController.text;
-                    var currentUserProvider = Provider.of<CurrentUserModel>(context, listen: false);
-                    var name = CurrentUser(name: uid);
-                    currentUserProvider.adduser(name);
                     final isMatched = await _handleSubmitted(uid, password);
                     if (isMatched) {
+                      var currentUserProvider = Provider.of<CurrentUserModel>(context, listen: false);
+                      var name = CurrentUser(name: uid);
+                      currentUserProvider.adduser(name);
                       Navigator.push( context, MaterialPageRoute(
                           builder: (context){
                             return HomePage();
