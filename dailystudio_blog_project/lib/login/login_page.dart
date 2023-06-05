@@ -129,6 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                                   setState(() {
                                     _passwordController.clear();
                                     _usernameController.clear();
+                                    Navigator.pop(context);
                                   });
                                 },
                               ),

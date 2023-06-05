@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dailystudio_blog_project/archive/archive_main.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
-
 import '../favorite/favorite.dart';
 import '../main.dart';
 import '../mainhome/home.dart';
+import '../mypage/setting.dart';
 
 
 
@@ -20,6 +21,9 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   PickedFile? _image;
   DateTime date = DateTime.now();
+  String scannedText = "";
+  List<ImageLabel> labels = [];
+  bool isImageLoaded = false;
   late DocumentSnapshot productSnapshot;
   final TextEditingController _title = new TextEditingController();
   final TextEditingController _content = new TextEditingController();
@@ -30,40 +34,88 @@ class _AddPostState extends State<AddPost> {
   bool _isLoading = false;
 
   Future getImage() async {
-    var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    var image  = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final ImageLabeler imageLabeler = GoogleMlKit.vision.imageLabeler();
 
     setState(() {
       _image = image!;
     });
+
+    if (_image != null) {
+      setState(() {
+        isImageLoaded = true;
+      });
+    }
+    final inputImage = InputImage.fromFilePath(_image!.path);
+    final List<ImageLabel> imageLabels = await imageLabeler.processImage(inputImage);
+    setState(() {
+      labels = imageLabels;
+    });
+
+    for (var label in labels) {
+      scannedText += '#'+ label.label + ' ';
+    }
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if (_selectedIndex == 0) {
-        Navigator.push( context, MaterialPageRoute(
-            builder: (context){
-              return HomePage();
-            }
-        ));
-      }
-      if(_selectedIndex == 1)
-      {
-        Navigator.push( context, MaterialPageRoute(
-            builder: (context){
-              return FavoritePage();
-            }
-        ));
-      }
-      else if(_selectedIndex == 2)
-      {
-        Navigator.push( context, MaterialPageRoute(
-            builder: (context){
-              return ArchiveMain();
-            }
-        ));
-      }
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('알림'),
+          content: Text('작성하고 계시는 글이 삭제됩니다\n괜찮으시겠습니까?'),
+          actions: [
+            TextButton(
+              child: Text('아니요'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            TextButton(
+              child: Text('예'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context);
+                  _selectedIndex = index;
+                  if (_selectedIndex == 0) {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return HomePage();
+                        }
+                    ));
+                  }
+                  if (_selectedIndex == 1) {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return FavoritePage();
+                        }
+                    ));
+                  }
+                  else if (_selectedIndex == 2) {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return ArchiveMain();
+                        }
+                    ));
+                  }
+
+                  if (_selectedIndex == 3) {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return SettingPage();
+                        }
+                    ));
+                  }
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -77,92 +129,89 @@ class _AddPostState extends State<AddPost> {
             backgroundColor: Color(0xFFFEF5ED),
             elevation: 1,
             leading: Expanded(
-              child: IconButton(
-                icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios_new,
+                      color: Color(0xFF72614E)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
             ),
             title: Center(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 50.0, 0.0),
                 child: const Text(
                   '기록 남기기',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    style: TextStyle(
+                        color: Color(0xFF72614E),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20),
                 ),
               ),
             ),
           ),
-          body: Stack(
-            children:[
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/background.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+          body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/background.png'), // Replace 'assets/a.png' with the path to your image
+                fit: BoxFit.cover,
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                reverse: true,
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                              child:Row(
-                                children:[
-                                  IconButton(
-                                    icon: Icon(Icons.calendar_today_outlined),
-                                    onPressed: () async {
-                                      final selectedDate = await showDatePicker(
-                                        context: context,
-                                        initialDate: date,
-                                        firstDate: DateTime(2000),
-                                        lastDate: DateTime.now(),
-                                      );
-                                      if (selectedDate != null) {
-                                        setState(() {
-                                          date = selectedDate;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                ],
-                              ),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              reverse: true,
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 0, 10),
+                            child: IconButton(
+                              icon: Icon(Icons.calendar_today_outlined,
+                              size: 26,),
+                              onPressed: () async {
+                                final selectedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: date,
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime.now(),
+                                );
+                                if (selectedDate != null) {
+                                  setState(() {
+                                    date = selectedDate;
+                                  });
+                                }
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
+                            style: TextStyle(
+                              fontSize: 18, // Adjust the font size as desired
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0),
-                        child:
-                        _isLoading ? new CircularProgressIndicator() : null,
-                      ),
-                      Container(
-                        height: 430,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0.0),
+                      child:
+                      _isLoading ? new CircularProgressIndicator() : null,
+                    ),
+                    Container(
+                        height: 426,
                         width: 370,
                         decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Color(0xffA39584)
-                            ),
-                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            width: 1,
+                            color: Color(0xFFBABABA),
+                          ),
+                          borderRadius: BorderRadius.circular(7),
                         ),
                         child: Column(
                           children: [
@@ -174,7 +223,8 @@ class _AddPostState extends State<AddPost> {
                                 controller: _title,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 16.0,
+                                  fontSize: 18.0,
+
                                 ),
                                 onChanged: (String text) {
                                   setState(() {
@@ -185,33 +235,34 @@ class _AddPostState extends State<AddPost> {
                                   hintText: "제목",
                                   border: UnderlineInputBorder(
                                     borderSide: const BorderSide(
-                                        color: Colors.blueAccent,
-                                        style: BorderStyle.solid,
-                                        width: 5.0,
+                                      color: Color(0xFF72614E),
+                                      style: BorderStyle.solid,
+                                      width: 5.0,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 5,),
+                            SizedBox(height: 50,),
                             InkWell(
                               child: _image == null
-                                  ? new Image.asset(
-                                'assets/default.png',
-                                height: 200.0,
-                                width: 370.0,
-                                fit: BoxFit.fill,
+                                  ? Image.asset(
+                                "assets/camera.png",
+                                height: 40.0,
+                                width: 100.0,
+
                               )
                                   : Image.file(
                                 File(_image!.path),
-                                height: 200.0,
-                                width: 370.0,
+                                height: 100.0,
+                                width: 185.0,
                                 fit: BoxFit.fill,
                               ),
                               onTap: () {
                                 getImage();
                               },
                             ),
+                            SizedBox(height: 50,),
 
                             Padding(
                               padding: const EdgeInsets.all(10.0),
@@ -219,7 +270,8 @@ class _AddPostState extends State<AddPost> {
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
                                 controller: _content,
-                                style: TextStyle(color: Colors.black, fontSize: 17.0),
+                                style: TextStyle(color: Colors.black,
+                                    fontSize: 18.0),
                                 onChanged: (String text) {
                                   setState(() {
                                     _isContent = text.length > 0;
@@ -229,48 +281,68 @@ class _AddPostState extends State<AddPost> {
                                   hintText: "내용",
                                   border: UnderlineInputBorder(
                                     borderSide: const BorderSide(
-                                      color: Colors.black54,
+                                      color: Color(0xFF72614E),
                                       style: BorderStyle.solid,
                                       width: 5.0,
                                     ),
                                   ),
-
                                 ),
                               ),
                             ),
                           ],
                         )
-                      ),
-                      SizedBox(height: 12,),
-                      ElevatedButton(
+                    ),
+                    SizedBox(height: 14,),
+                    ElevatedButton(
                         child: const Text(
                           '기록 인화하기',
                           style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700
-                          ),
+                              color: Color(0xFF72614E),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17),
                         ),
                         style: ElevatedButton.styleFrom(
-                          //이부분 --------------------------------------------?
-                            primary: Color(0xffE3CFB8),
-                            minimumSize: const Size(370, 48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8), // 원하는 둥근 정도 설정
-                            ),
+                          primary:  Color(0xFFE3CFB8),
+                          minimumSize: const Size(370, 46),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                          ),
                         ),
-
-                        onPressed: _isTitle && _isContent && !_isLoading
-                            ? () => _handleSubmitted(_title.text,
-                            _content.text, _image == null?File(
-                                "https://firebasestorage.googleapis.com/v0/b/dailyblogproject-e323c.appspot.com/o/post%2F%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.png?alt=media&token=fdbd13ff-bec6-4615-ae91-20410ff83a8a"):File(_image!.path), cn!.name)
-                            : null,
-                      ),
-                    ],
-                  ),
+                        onPressed: (){
+                          if(_isTitle && _isContent && !_isLoading &&_image != null)
+                          {
+                            _handleSubmitted(_title.text,
+                                _content.text, File(_image!.path), cn!.name);
+                          }
+                          else
+                          {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('알림'),
+                                  content: Text('제목, 사진, 내용을 기입해주세요'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: () {
+                                        setState(() {
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        }
+                    ),
+                    SizedBox(height: 16,),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
@@ -293,7 +365,9 @@ class _AddPostState extends State<AddPost> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.amber[800],
+            backgroundColor: Color(0xFFFEF5ED),
+            selectedItemColor: Color(0xFF685F53),
+
             unselectedItemColor: Colors.grey,
             unselectedLabelStyle: TextStyle(
                 fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
@@ -333,6 +407,7 @@ class _AddPostState extends State<AddPost> {
         'year' : date.year,
         'month' : date.month,
         'day' : date.day,
+        'tag': scannedText,
         'wholeday' : date.year.toString() +  date.month.toString()  + date.day.toString(),
         'createdTime': FieldValue.serverTimestamp(),
         'modifiedTime': FieldValue.serverTimestamp(),
@@ -366,6 +441,7 @@ class _AddPostState extends State<AddPost> {
           'year' : date.year,
           'month' : date.month,
           'day' : date.day,
+          'tag': scannedText,
           'wholeday' : date.year.toString()  + date.month.toString()  + date.day.toString(),
           'createdTime': FieldValue.serverTimestamp(),
           'modifiedTime': FieldValue.serverTimestamp(),
@@ -379,4 +455,3 @@ class _AddPostState extends State<AddPost> {
 
   }
 }
-

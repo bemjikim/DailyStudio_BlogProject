@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
+import '../mypage/setting.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,6 +19,14 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if(_selectedIndex == 3)
+      {
+        Navigator.push( context, MaterialPageRoute(
+            builder: (context){
+              return SettingPage();
+            }
+        ));
+      }
       if(_selectedIndex == 2)
         {
           Navigator.push( context, MaterialPageRoute(
@@ -47,12 +56,17 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.grey,
+          backgroundColor:Color (0xFFFEF5ED),
           automaticallyImplyLeading: false,
           title: Center(
             child: Padding(
               padding:  EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-              child:  Text("Daily Studio"),
+              child:  Text("Daily Studio",
+                style: TextStyle(
+                    color: Color(0xFF443C34),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24),
+              ),
             ),
           ),
         ),
@@ -70,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 380,),
+                  SizedBox(height: 406,),
                   Container(
                     alignment: Alignment.center,
                     child: ElevatedButton(
@@ -97,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
-                  SizedBox(height: 8,),
+                  SizedBox(height: 12),
                   Container(
                     alignment: Alignment.center,
                     child: ElevatedButton(
@@ -124,34 +138,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
-                  SizedBox(height: 8,),
-                  Container(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      child: Text(
-                        "로그아웃", // 인덱스 0에 해당하는 요소가 없을 경우 빈 문자열 반환
-                        style: TextStyle(
-                            color: Color(0xFF443C34),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFE3CFB8),
-                        minimumSize: const Size(360, 46),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
-                        ),
-                      ),
-                      onPressed: () {
-                        currentUserProvider.removeUser(cn!);
-                        Navigator.push( context, MaterialPageRoute(
-                            builder: (context){
-                              return LoginPage();
-                            }
-                        ));
-                      },
-                    ),
-                  ),
+                  SizedBox(height: 8,)
                 ],
               ),
             ),
@@ -177,11 +164,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          backgroundColor: Color(0xFFFEF5ED),
+          selectedItemColor: Color(0xFF685F53),
+
           unselectedItemColor: Colors.grey,
           unselectedLabelStyle: TextStyle(
               fontSize: 10,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               color: Colors.grey),
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
