@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                      primary:  Color(0xFFE3CFB8),
+                      primary:  Color(0xFFE6DACE),
                       minimumSize: const Size(360, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       style: TextButton.styleFrom(
-                          primary: Color(0xFFED9B21),
+                          primary: Color(0xFFB59884),
                       ),
                       onPressed: () {
                         Navigator.push( context, MaterialPageRoute(

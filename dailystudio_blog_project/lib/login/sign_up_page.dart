@@ -148,7 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xFFE5C49C),
+                            primary: Color(0xFFE6CCAD),
                             minimumSize: const Size(18, 44),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12), // 버튼의 모서리를 둥글게 설정
@@ -450,7 +450,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                                primary: Color(0xFFE5C49C),
+                                primary: Color(0xFFE6CCAD),
                                 minimumSize: const Size(360, 45),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12), // 버튼의 모서리를 둥글게 설정

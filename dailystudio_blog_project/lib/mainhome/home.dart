@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 406,),
+                  SizedBox(height: 420,),
                   Container(
                     alignment: Alignment.center,
                     child: ElevatedButton(
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 16),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFEFE3D6),
+                        primary:  Color(0xFFF0E7DC),
                         minimumSize: const Size(360, 46),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 10),
                   Container(
                     alignment: Alignment.center,
                     child: ElevatedButton(
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 16),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFEFE3D6),
+                        primary:  Color(0xFFF0E7DC),
                         minimumSize: const Size(360, 46),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
