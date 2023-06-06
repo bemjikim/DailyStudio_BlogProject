@@ -166,7 +166,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
           backgroundColor: Color(0xFFFEF5ED),
           elevation: 1,
           title: Text(
-             years + "." + month.toString().padLeft(2, '0') + "." + day.toString().padLeft(2, '0'),
+            years + "." + month.toString().padLeft(2, '0') + "." + day.toString().padLeft(2, '0'),
             style: TextStyle(
               fontSize: 20,
               color: Color(0xFF72614E),
@@ -239,16 +239,16 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                       .collection('posted')
                       .get();
                   if(check_month.docs.isEmpty)
-                    {
-                      await FirebaseFirestore.instance
-                          .collection('user')
-                          .doc(cn!.name)
-                          .collection('post')
-                          .doc(years)
-                          .collection('month')
-                          .doc(month)
-                          .delete();
-                    }
+                  {
+                    await FirebaseFirestore.instance
+                        .collection('user')
+                        .doc(cn!.name)
+                        .collection('post')
+                        .doc(years)
+                        .collection('month')
+                        .doc(month)
+                        .delete();
+                  }
                   final check_year = await FirebaseFirestore.instance
                       .collection('user')
                       .doc(cn!.name)
@@ -298,24 +298,24 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         .doc(month)
                         .collection('posted')
                         .doc(id).update({
-                        'Title': _titleController.text,
-                        'Content': _descriptionController.text,
-                        'IMAGE': downloadUrl,
-                        if(_isImage)
+                      'Title': _titleController.text,
+                      'Content': _descriptionController.text,
+                      'IMAGE': downloadUrl,
+                      if(_isImage)
                         'tag': scannedText.toLowerCase(),
                     });
                     if(data['favorite'] == true)
-                      {
-                        FirebaseFirestore.instance
-                            .collection('user')
-                            .doc(cn!.name)
-                            .collection('favorite')
-                            .doc(id).update({
-                          'Title': _titleController.text,
-                          'Content': _descriptionController.text,
-                          'IMAGE': downloadUrl,
-                        });
-                      }
+                    {
+                      FirebaseFirestore.instance
+                          .collection('user')
+                          .doc(cn!.name)
+                          .collection('favorite')
+                          .doc(id).update({
+                        'Title': _titleController.text,
+                        'Content': _descriptionController.text,
+                        'IMAGE': downloadUrl,
+                      });
+                    }
                     setState(() {
                       i = 0;
                       _isImage = false;
@@ -330,9 +330,9 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Text('Save',
-                  style: TextStyle(
-                    fontSize: 18
-                  ),),
+                    style: TextStyle(
+                        fontSize: 18
+                    ),),
                 ),
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF443C34)),
@@ -369,41 +369,41 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         child: IconButton(
                           onPressed: ()async{
                             if(data['favorite'] == false)
-                            try {
-                              await FirebaseFirestore.instance
-                                  .collection('user')
-                                  .doc(cn!.name)
-                                  .collection('post')
-                                  .doc(years)
-                                  .collection('month')
-                                  .doc(month)
-                                  .collection('posted')
-                                  .doc(id).update({
-                                'favorite' : true,
-                              });
-                              await FirebaseFirestore.instance
-                                  .collection('user')
-                                  .doc(cn!.name)
-                                  .collection('favorite')
-                                  .doc(id).set({
-                                'IMAGE': data['IMAGE'],
-                                'Title':  data['Title'],
-                                'Content':  data['Content'],
-                                'favorite':  true,
-                                'year' :  data['year'],
-                                'month' :  data['month'],
-                                'day' :  data['day'],
-                                'wholeday' : int.parse(data['wholeday']),
-                                'uid' : id,
-                              });
-                              setState(() {
-                                i = 0;
-                              });
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())),
-                              );
-                            }
+                              try {
+                                await FirebaseFirestore.instance
+                                    .collection('user')
+                                    .doc(cn!.name)
+                                    .collection('post')
+                                    .doc(years)
+                                    .collection('month')
+                                    .doc(month)
+                                    .collection('posted')
+                                    .doc(id).update({
+                                  'favorite' : true,
+                                });
+                                await FirebaseFirestore.instance
+                                    .collection('user')
+                                    .doc(cn!.name)
+                                    .collection('favorite')
+                                    .doc(id).set({
+                                  'IMAGE': data['IMAGE'],
+                                  'Title':  data['Title'],
+                                  'Content':  data['Content'],
+                                  'favorite':  true,
+                                  'year' :  data['year'],
+                                  'month' :  data['month'],
+                                  'day' :  data['day'],
+                                  'wholeday' : int.parse(data['wholeday']),
+                                  'uid' : id,
+                                });
+                                setState(() {
+                                  i = 0;
+                                });
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())),
+                                );
+                              }
 
                             if(data['favorite'] == true)
                               try {
@@ -416,7 +416,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                                     .doc(month)
                                     .collection('posted')
                                     .doc(id).update({
-                                'favorite' : false,
+                                  'favorite' : false,
                                 });
                                 setState(() {
                                   i = 0;
@@ -441,12 +441,12 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8, left: 8),
                         child: Text(
-                            data['Title'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
+                          data['Title'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
 
-                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -479,29 +479,29 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                     });
                   },
                   child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child:_isImage?InkWell(
-                            onTap: (){
-                              getImage();
-                            },
-                            child: Image.file(
-                              File(_image!.path),
-                              height: 250.0,
-                              width: 370.0,
-                              fit: BoxFit.fill,
-                            ),
-                          ):Image.network(
-                              data['IMAGE'],
-                              height: 250,
-                              width: 370,
-                              fit: BoxFit.fill,
-                          ),
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child:_isImage?InkWell(
+                        onTap: (){
+                          getImage();
+                        },
+                        child: Image.file(
+                          File(_image!.path),
+                          height: 250.0,
+                          width: 370.0,
+                          fit: BoxFit.fill,
                         ),
+                      ):Image.network(
+                        data['IMAGE'],
+                        height: 250,
+                        width: 370,
+                        fit: BoxFit.fill,
                       ),
+                    ),
+                  ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 6,),
                 _pageState == DetailPageState.normal?Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -510,10 +510,10 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         width: 348,
                         decoration: BoxDecoration(
                           border: Border.all(
-                          width: 1,
-                          color: Colors.transparent,
+                            width: 1,
+                            color: Colors.transparent,
                           ),
-                          ),
+                        ),
                         child: Text(
                           data['Content'],
                           style: TextStyle(
@@ -562,7 +562,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                   ),
                 ),
                 if( _pageState == DetailPageState.normal)
-                SizedBox(height: 160,)
+                  SizedBox(height: 174,)
               ],
             ),
           ),

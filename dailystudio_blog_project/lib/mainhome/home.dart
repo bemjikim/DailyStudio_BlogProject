@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 16),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFE3CFB8),
+                        primary:  Color(0xFFEFE3D6),
                         minimumSize: const Size(360, 46),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 16),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFE3CFB8),
+                        primary:  Color(0xFFEFE3D6),
                         minimumSize: const Size(360, 46),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here

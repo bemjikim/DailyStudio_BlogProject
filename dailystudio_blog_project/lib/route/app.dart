@@ -19,7 +19,7 @@ import '../login/login_page.dart';
 import '../login/sign_up_page.dart';
 import '../mainhome/home.dart';
 
-// TODO: Convert ShrineApp to stateful widget (104)
+
 class DailyStudioBlog extends StatelessWidget {
   const DailyStudioBlog({Key? key}) : super(key: key);
 
@@ -27,6 +27,7 @@ class DailyStudioBlog extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shrine',
+      debugShowCheckedModeBanner: false,
       home: LoginPage(),
       // onGenerateRoute: (settings) {
       //   if (settings.name == '/month_archive') {
@@ -42,5 +43,4 @@ class DailyStudioBlog extends StatelessWidget {
   }
 }
 
-// TODO: Build a Shrine Theme (103)
-// TODO: Build a Shrine Text Theme (103)
+

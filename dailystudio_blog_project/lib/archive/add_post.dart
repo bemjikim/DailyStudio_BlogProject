@@ -62,11 +62,36 @@ class _AddPostState extends State<AddPost> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('알림'),
-          content: Text('작성하고 계시는 글이 삭제됩니다\n괜찮으시겠습니까?'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+          backgroundColor: Color(0xFFD4C6BB),
+
+          title: Text('알림',
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+              fontSize: 19,
+                  //color: Color(0xFF746553),
+                color: Color(0xFF3C3731)
+
+            ),),
+          content: Text('작성하고 있는 글이 저장되지않네..\n그래도 괜찮으신가?',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+                color: Color(0xFF6B5F51),
+                fontSize: 17
+
+            ),),
+
           actions: [
             TextButton(
-              child: Text('아니요'),
+              child: Text('아니요',
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF746553),
+                  fontSize: 16
+
+                ),),
               onPressed: () {
                 setState(() {
                   Navigator.pop(context);
@@ -74,7 +99,13 @@ class _AddPostState extends State<AddPost> {
               },
             ),
             TextButton(
-              child: Text('예'),
+              child: Text('예',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B5F51),
+                    fontSize: 16
+
+                ),),
               onPressed: () {
                 setState(() {
                   Navigator.pop(context);
@@ -243,26 +274,32 @@ class _AddPostState extends State<AddPost> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 50,),
+                            SizedBox(height: 4,),
                             InkWell(
                               child: _image == null
-                                  ? Image.asset(
-                                "assets/camera.png",
-                                height: 40.0,
-                                width: 100.0,
-
-                              )
+                                  ?
+                               Column(
+                                 children: [
+                                   SizedBox(height: 60,),
+                                   Image.asset(
+                                    "assets/camera.png",
+                                    height: 45.0,
+                                    width: 105.0,
+                                    ),
+                                   SizedBox(height: 45,),
+                                 ],
+                               )
                                   : Image.file(
                                 File(_image!.path),
-                                height: 100.0,
-                                width: 320.0,
+                                height: 220.0,
+                                width: 340.0,
                                 fit: BoxFit.fill,
                               ),
                               onTap: () {
                                 getImage();
                               },
                             ),
-                            SizedBox(height: 50,),
+                            SizedBox(height: 3,),
 
                             Padding(
                               padding: const EdgeInsets.all(10.0),
@@ -320,11 +357,34 @@ class _AddPostState extends State<AddPost> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('알림'),
-                                  content: Text('제목, 사진, 내용을 기입해주세요'),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  ),
+                                  backgroundColor: Color(0xFfF8ECE2),
+                                  title: Text('알림',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 19,
+                                        //color: Color(0xFF746553),
+                                        color: Color(0xFF3C3731)
+
+                                    ),),
+                                  content: Text('기록을 남기려면 제목, 사진, 내용을 모두 기록ㅁ해주셔야 해유~',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF6B5F51),
+                                          fontSize: 17
+
+                                      ),),
                                   actions: [
                                     TextButton(
-                                      child: Text('OK'),
+                                      child: Text('OK',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Color(0xFF746553),
+                                              fontSize: 16
+
+                                          ),),
                                       onPressed: () {
                                         setState(() {
                                           Navigator.pop(context);

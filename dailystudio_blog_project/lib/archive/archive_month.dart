@@ -241,7 +241,7 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                                   borderRadius: BorderRadius.circular(12),
                                   child: Image.network(
                                     yearCollection.get('IMAGE'),
-                                    height: 200.0,
+                                    height: 250.0,
                                     width: 370.0,
                                     fit: BoxFit.fill,
                                   ),

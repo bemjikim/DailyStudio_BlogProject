@@ -58,6 +58,9 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       filled: true,
                       labelText: 'Username',
+                      labelStyle: TextStyle(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
                       fillColor: Color(0xFFF4EBE4),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -74,6 +77,9 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       filled: true,
                       labelText: 'Password',
+                      labelStyle: TextStyle(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
                       fillColor: Color(0xFFF4EBE4),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -120,11 +126,34 @@ class _LoginPageState extends State<LoginPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('알림'),
-                            content: Text('아이디 혹은 비밀번호가 일치하지 않습니다.'),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            backgroundColor: Color(0xFfF8ECE2),
+                            title: Text('알림',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 19,
+                                  //color: Color(0xFF746553),
+                                  color: Color(0xFF3C3731)
+
+                              ),),
+                            content: Text('아이디 혹은 비밀번호가 잘못 입력된 것 같아요. 다시 입력해 주세요!',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF6B5F51),
+                                  fontSize: 17
+
+                              ),),
                             actions: [
                               TextButton(
-                                child: Text('OK'),
+                                child: Text('OK',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF746553),
+                                        fontSize: 16
+
+                                    ),),
                                 onPressed: () {
                                   setState(() {
                                     _passwordController.clear();

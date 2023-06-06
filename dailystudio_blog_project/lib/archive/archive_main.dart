@@ -110,7 +110,8 @@ class _ArchiveMainState extends State<ArchiveMain> {
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
                 child: IconButton(
                   icon: Icon(Icons.search,
-                      color: Color(0xFF72614E)),
+                      color: Color(0xFF72614E),
+                  size: 29,),
                   onPressed: () {
                     Navigator.push( context, MaterialPageRoute(
                         builder: (context){
@@ -163,9 +164,9 @@ class _ArchiveMainState extends State<ArchiveMain> {
                           ListTile(
                             title: Text(yearCollection.id + "년",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 20,
                                 color: Color(0xFF72614E),// Adjust the value as per your preference
-                                fontWeight: FontWeight.w500, // You can also adjust the font weight if needed
+                                fontWeight: FontWeight.w600, // You can also adjust the font weight if needed
                               ),),
                           ),
                         StreamBuilder<QuerySnapshot>(
@@ -250,9 +251,9 @@ class _ArchiveMainState extends State<ArchiveMain> {
                                             padding: const EdgeInsets.all(5.0),
                                             child: Text(month + "월",
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: 16,
                                                 color: Color(0xFF72614E),// Adjust the value as per your preference
-                                                fontWeight: FontWeight.w500, // You can also adjust the font weight if needed
+                                                fontWeight: FontWeight.w600, // You can also adjust the font weight if needed
                                               ),),
                                           ),
                                         ],
