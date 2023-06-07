@@ -64,9 +64,10 @@ class _SignUpPageState extends State<SignUpPage> {
             child: const Text(
               'Sign Up',
               style: TextStyle(
+                  fontFamily: 'gangwon',
                   color: Color(0xFF72614E),
                   fontWeight: FontWeight.w600,
-                  fontSize: 20),
+                  fontSize: 25),
 
             ),
           ),
@@ -96,11 +97,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment:  CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                    '   아이디*',
+                    '  아이디*',
                     style: TextStyle(
+                      fontFamily: 'gangwon',
                       fontWeight: FontWeight.bold,
                       color: Colors.black.withOpacity(0.5),
-                      fontSize: 16,)
+                      fontSize: 20,)
                     ),
                     SizedBox(height: 5.0),
                     Row(
@@ -142,9 +144,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           child: const Text(
                             '중복확인',
                             style: TextStyle(
+                                fontFamily: 'gangwon',
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
-                              fontSize: 16
+                              fontSize: 20
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
@@ -169,17 +172,19 @@ class _SignUpPageState extends State<SignUpPage> {
                                       backgroundColor: Color(0xFfF8ECE2),
                                       title: Text('Dailystudio',
                                         style: TextStyle(
+                                            fontFamily: 'gangwon',
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 19,
+                                          fontSize: 24,
                                           //color: Color(0xFF746553),
                                           color: Color(0xFF3C3731)
 
                                       ),),
                                       content: Text('이미 존재하는 아이디입니다.',
                                         style: TextStyle(
+                                            fontFamily: 'gangwon',
                                             fontWeight: FontWeight.w500,
                                             color: Color(0xFF6B5F51),
-                                            fontSize: 17
+                                            fontSize: 21
 
                                         ),),
                                       actions: [
@@ -188,7 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: Color(0xFF746553),
-                                                fontSize: 16
+                                                fontSize: 18
 
                                             ),),
                                           onPressed: () {
@@ -210,19 +215,21 @@ class _SignUpPageState extends State<SignUpPage> {
                                         borderRadius: BorderRadius.circular(18.0),
                                       ),
                                       backgroundColor: Color(0xFfF8ECE2),
-                                      title: Text(' Dailystudio',
+                                      title: Text('Dailystudio',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 19,
+                                            fontFamily: 'gangwon',
+                                            fontSize: 24,
                                             //color: Color(0xFF746553),
                                             color: Color(0xFF3C3731)
 
                                         ),),
                                       content: Text('사용가능한 아이디입니다.',
                                         style: TextStyle(
+                                            fontFamily: 'gangwon',
                                             fontWeight: FontWeight.w500,
                                             color: Color(0xFF6B5F51),
-                                            fontSize: 17
+                                            fontSize: 21
 
                                         ),),
                                       actions: [
@@ -231,7 +238,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: Color(0xFF746553),
-                                                fontSize: 16
+                                                fontSize: 18
 
                                             ),),
                                           onPressed: () {
@@ -254,11 +261,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     SizedBox(height: 14.0),
                     Text(
-                        '   닉네임*',
+                        '  닉네임*',
                         style: TextStyle(
+                          fontFamily: 'gangwon',
                           fontWeight: FontWeight.bold,
                           color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,)
+                          fontSize: 20,)
                     ),
                     SizedBox(height: 5.0),
                     Container(
@@ -291,11 +299,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     SizedBox(height: 14.0),
                     Text(
-                        '   비밀번호*',
+                        '  비밀번호*',
                         style: TextStyle(
+                          fontFamily: 'gangwon',
                           fontWeight: FontWeight.bold,
                           color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,)
+                          fontSize: 20,)
                     ),
                     SizedBox(height: 5.0),
                     Stack(
@@ -347,11 +356,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     SizedBox(height: 14.0),
                     Text(
-                        '   비밀번호 확인*',
+                        '  비밀번호 확인*',
                         style: TextStyle(
+                          fontFamily: 'gangwon',
                           fontWeight: FontWeight.bold,
                           color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,)
+                          fontSize: 20,)
                     ),
                     SizedBox(height: 5.0),
                     Stack(
@@ -392,11 +402,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     SizedBox(height: 14.0),
                     Text(
-                        '   이메일*',
+                        '  이메일*',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'gangwon',
                           color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,)
+                          fontSize: 20,)
                     ),
                     SizedBox(height: 5.0),
                     Container(
@@ -444,9 +455,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             child: const Text(
                               '회원가입',
                               style: TextStyle(
+                                  fontFamily: 'gangwon',
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                fontSize: 18
+                                fontSize: 22
                               ),
                             ),
                             style: ElevatedButton.styleFrom(

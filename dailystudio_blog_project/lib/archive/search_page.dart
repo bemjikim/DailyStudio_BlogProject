@@ -99,7 +99,8 @@ class SearchPageState extends State<SearchPage> {
                 child: const Text(
                   '검색',
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 23,
+                      fontFamily: 'gangwon',
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF72614E) ),
                 ),
@@ -202,7 +203,8 @@ class SearchPageState extends State<SearchPage> {
           return Center(
             child: Text("There is no data",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 20,
+              fontFamily: 'gangwon',
               fontWeight: FontWeight.w400,
             ),),
           );
@@ -357,6 +359,7 @@ class SearchPageState extends State<SearchPage> {
                                                   ? Icon(Icons.star)
                                                   : Icon(Icons.star_border_outlined),
                                               iconSize: 28,
+                                              color: Color(0xFF72614E),
                                             ),
                                           ),
                                           Padding(
@@ -364,8 +367,10 @@ class SearchPageState extends State<SearchPage> {
                                             child: Text(
                                               productSnapshot['Title'].toString(),
                                               style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 20,
+                                                fontFamily: 'gangwon',
+                                                color: Color(0xFF72614E),
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 22,
                                               ),
                                             ),
                                           ),
@@ -374,7 +379,7 @@ class SearchPageState extends State<SearchPage> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(0.0, 7, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(0.0, 11, 0, 0),
                                     child: Stack(children: [
                                       InkWell(
                                         onTap: () {
@@ -388,7 +393,7 @@ class SearchPageState extends State<SearchPage> {
                                             productSnapshot['IMAGE'],
                                             height: 250.0,
                                             width: 370.0,
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.fitWidth,
                                           ),
                                         ),
                                       ),

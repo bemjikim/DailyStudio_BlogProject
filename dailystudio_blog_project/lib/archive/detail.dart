@@ -168,7 +168,8 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
           title: Text(
             years + "." + month.toString().padLeft(2, '0') + "." + day.toString().padLeft(2, '0'),
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 24,
+              fontFamily: 'gangwon',
               color: Color(0xFF72614E),
               fontWeight: FontWeight.w600,
             ),
@@ -331,7 +332,9 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Text('Save',
                     style: TextStyle(
-                        fontSize: 18
+                        fontFamily: 'gangwon',
+                        fontSize: 22,
+                      fontWeight: FontWeight.w600
                     ),),
                 ),
                 style: ButtonStyle(
@@ -356,7 +359,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
               ? Center(child: CircularProgressIndicator())
               :SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            reverse: true,
+            reverse: false,
             child: Column(
               children: [
                 Padding(
@@ -436,6 +439,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                           },
                           icon: data['favorite']==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
                           iconSize: 28,
+                          color: Color(0xFF72614E),
                         ),
                       ),
                       Padding(
@@ -443,7 +447,9 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         child: Text(
                           data['Title'],
                           style: TextStyle(
-                            fontWeight: FontWeight.w400,
+                            fontFamily: 'gangwon',
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF72614E),
                             fontSize: 20,
 
                           ),
@@ -490,13 +496,13 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                           File(_image!.path),
                           height: 250.0,
                           width: 370.0,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.fitWidth,
                         ),
                       ):Image.network(
                         data['IMAGE'],
                         height: 250,
                         width: 370,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.fitWidth,
                       ),
                     ),
                   ),
@@ -517,13 +523,14 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         child: Text(
                           data['Content'],
                           style: TextStyle(
-                            fontWeight: FontWeight.w400,
+                            fontFamily: 'gangwon',
+                            fontWeight: FontWeight.w500,
                             fontSize: 20,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: 30,),
                       Container(
                         width: 348,
                         decoration: BoxDecoration(
@@ -535,7 +542,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                         child: Text(
                           data['tag'],
                           style: TextStyle(
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w300,
                             fontSize: 18,
                             color: Colors.black,
                           ),
@@ -547,7 +554,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                   width: 368,
                   child: TextFormField(
                     controller: _descriptionController,
-                    maxLines: 10, // 최대 라인수
+                    maxLines: 11, // 최대 라인수
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -562,7 +569,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                   ),
                 ),
                 if( _pageState == DetailPageState.normal)
-                  SizedBox(height: 174,)
+                  SizedBox(height: 150,)
               ],
             ),
           ),

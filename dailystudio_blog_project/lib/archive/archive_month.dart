@@ -99,7 +99,8 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
               padding:  EdgeInsets.fromLTRB(0.0, 0.0, 50.0, 0.0),
               child:  Text(month + "월의 기록",
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 23,
+                    fontFamily: 'gangwon',
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF72614E) ),),
             ),
@@ -207,6 +208,7 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                                     },
                                       icon:  yearCollection.get('favorite')==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
                                     iconSize: 28,
+                                    color: Color(0xFF72614E),
                                   ),
                                 ),
 
@@ -215,8 +217,10 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                                   child: Text(
                                       yearCollection.get('Title').toString(),
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 20,
+                                        fontFamily: 'gangwon',
+                                        color: Color(0xFF72614E),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 22,
 
                                       ),
                                   ),
@@ -226,7 +230,7 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 7, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0.0, 11, 0, 0),
                           child: Stack(
                             children:[
                               InkWell(
@@ -243,7 +247,7 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                                     yearCollection.get('IMAGE'),
                                     height: 250.0,
                                     width: 370.0,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.fitWidth,
                                   ),
                                 ),
                               ),
@@ -252,8 +256,9 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
                                 child: Text(
                                   yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString().padLeft(2, '0') + '.' + yearCollection.get('day').toString().padLeft(2, '0'),
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
+                                    fontFamily: 'gangwon',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 21,
                                     color: Colors.black,
                                   ),
                                 ),
@@ -295,7 +300,7 @@ class _ArchiveMonthState extends State<ArchiveMonth> {
           selectedItemColor: Color(0xFF685F53),
           unselectedItemColor: Colors.grey,
           unselectedLabelStyle: TextStyle(
-              fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
+              fontSize: 10, fontFamily: 'gangwon',fontWeight: FontWeight.bold, color: Colors.grey),
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
         ),

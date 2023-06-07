@@ -63,9 +63,10 @@ class _HomePageState extends State<HomePage> {
               padding:  EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
               child:  Text("Daily Studio",
                 style: TextStyle(
+                    fontFamily: 'gangwon',
                     color: Color(0xFF443C34),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 24),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30),
               ),
             ),
           ),
@@ -91,9 +92,10 @@ class _HomePageState extends State<HomePage> {
                       child: const Text(
                         '사진 찍으러 왔어요! (기록 남기기)',
                         style: TextStyle(
-                            color: Color(0xFF443C34),
+                            fontFamily: 'gangwon',
+                            color: Color(0xFF72614E),
                             fontWeight: FontWeight.w600,
-                            fontSize: 16),
+                            fontSize: 20),
                       ),
                       style: ElevatedButton.styleFrom(
                         primary:  Color(0xFFF0E7DC),
@@ -118,9 +120,10 @@ class _HomePageState extends State<HomePage> {
                       child: const Text(
                         '사진 찾으러 왔어요! (기록 보관소)',
                         style: TextStyle(
-                            color: Color(0xFF443C34),
+                            fontFamily: 'gangwon',
+                            color: Color(0xFF72614E),
                             fontWeight: FontWeight.w600,
-                            fontSize: 16),
+                            fontSize: 20),
                       ),
                       style: ElevatedButton.styleFrom(
                         primary:  Color(0xFFF0E7DC),

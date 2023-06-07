@@ -104,7 +104,8 @@ class _MyPageState extends State<MyPage> {
               child: Text(
                 "계정",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontFamily: 'gangwon',
+                  fontSize: 23,
                   color: Color(0xFF72614E),
                   fontWeight: FontWeight.w600,
                 ),
@@ -140,9 +141,10 @@ class _MyPageState extends State<MyPage> {
                     child: Text(
                       "User id",
                       style: TextStyle(
+                          fontFamily: 'gangwon',
                           color: Color(0xFF72614E),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600
                       ),
                     ),
                   ),
@@ -151,7 +153,9 @@ class _MyPageState extends State<MyPage> {
                     child: Text(
                       data['Userid'],
                       style: TextStyle(
-                        fontSize: 20,
+                        fontFamily: 'gangwon',
+                        fontSize: 23,
+                          fontWeight: FontWeight.w400,
                         color: Color(0xFF72614E),
                       ),
                     ),
@@ -166,9 +170,10 @@ class _MyPageState extends State<MyPage> {
                     child: Text(
                       "NickName",
                       style: TextStyle(
+                          fontFamily: 'gangwon',
                           color: Color(0xFF72614E),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600
                       ),
                     ),
                   ),
@@ -177,7 +182,9 @@ class _MyPageState extends State<MyPage> {
                     child: Text(
                       data['Nickname'],
                       style: TextStyle(
-                        fontSize: 20,
+                        fontFamily: 'gangwon',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 23,
                         color: Color(0xFF72614E),
                       ),
                     ),
@@ -192,9 +199,10 @@ class _MyPageState extends State<MyPage> {
                     child: Text(
                       "Email",
                       style: TextStyle(
+                          fontFamily: 'gangwon',
                           color: Color(0xFF72614E),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500
+                          fontSize: 23,
+                          fontWeight: FontWeight.w600
                       ),
                     ),
                   ),
@@ -203,7 +211,9 @@ class _MyPageState extends State<MyPage> {
                     child: Text(
                       data['Email'],
                       style: TextStyle(
-                        fontSize: 20,
+                        fontFamily: 'gangwon',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 22,
                         color: Color(0xFF72614E),
                       ),
                     ),

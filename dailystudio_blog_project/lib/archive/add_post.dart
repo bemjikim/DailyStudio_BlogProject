@@ -65,21 +65,24 @@ class _AddPostState extends State<AddPost> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
           ),
-          backgroundColor: Color(0xFFD4C6BB),
+
+          backgroundColor: Color(0xFfF8ECE2),
 
           title: Text('알림',
             style: TextStyle(
+                fontFamily: 'gangwon',
                 fontWeight: FontWeight.w600,
-              fontSize: 19,
+              fontSize: 21,
                   //color: Color(0xFF746553),
                 color: Color(0xFF3C3731)
 
             ),),
           content: Text('작성하고 있는 글이 저장되지않네..\n그래도 괜찮으신가?',
             style: TextStyle(
+                fontFamily: 'gangwon',
               fontWeight: FontWeight.w500,
                 color: Color(0xFF6B5F51),
-                fontSize: 17
+                fontSize: 20
 
             ),),
 
@@ -87,9 +90,10 @@ class _AddPostState extends State<AddPost> {
             TextButton(
               child: Text('아니요',
                 style: TextStyle(
+                    fontFamily: 'gangwon',
                     fontWeight: FontWeight.w500,
                     color: Color(0xFF746553),
-                  fontSize: 16
+                  fontSize: 21
 
                 ),),
               onPressed: () {
@@ -101,9 +105,10 @@ class _AddPostState extends State<AddPost> {
             TextButton(
               child: Text('예',
                 style: TextStyle(
+                    fontFamily: 'gangwon',
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF6B5F51),
-                    fontSize: 16
+                    fontSize: 21
 
                 ),),
               onPressed: () {
@@ -174,9 +179,10 @@ class _AddPostState extends State<AddPost> {
                 child: const Text(
                   '기록 남기기',
                     style: TextStyle(
+                        fontFamily: 'gangwon',
                         color: Color(0xFF72614E),
                         fontWeight: FontWeight.w600,
-                        fontSize: 20),
+                        fontSize: 23),
                 ),
               ),
             ),
@@ -190,7 +196,7 @@ class _AddPostState extends State<AddPost> {
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              reverse: true,
+              reverse: false,
               child: Container(
                 child: Column(
                   children: <Widget>[
@@ -222,8 +228,9 @@ class _AddPostState extends State<AddPost> {
                           Text(
                             "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
                             style: TextStyle(
-                              fontSize: 18, // Adjust the font size as desired
-                              fontWeight: FontWeight.w500,
+                              fontSize: 22,
+                              fontFamily: 'gangwon',// Adjust the font size as desired
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -235,7 +242,7 @@ class _AddPostState extends State<AddPost> {
                       _isLoading ? new CircularProgressIndicator() : null,
                     ),
                     Container(
-                        height: 426,
+                        //height: 426,
                         width: 370,
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -254,7 +261,10 @@ class _AddPostState extends State<AddPost> {
                                 controller: _title,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 18.0,
+                                  fontSize: 21.0,
+                                    fontFamily: 'gangwon',
+                                    fontWeight: FontWeight.w600
+
 
                                 ),
                                 onChanged: (String text) {
@@ -291,7 +301,7 @@ class _AddPostState extends State<AddPost> {
                                )
                                   : Image.file(
                                 File(_image!.path),
-                                height: 220.0,
+
                                 width: 340.0,
                                 fit: BoxFit.fill,
                               ),
@@ -305,10 +315,12 @@ class _AddPostState extends State<AddPost> {
                               padding: const EdgeInsets.all(10.0),
                               child: TextField(
                                 keyboardType: TextInputType.multiline,
-                                maxLines: null,
+                                maxLines: 9,
                                 controller: _content,
                                 style: TextStyle(color: Colors.black,
-                                    fontSize: 18.0),
+                                    fontSize: 21.0,
+                                    fontFamily: 'gangwon',
+                                    fontWeight: FontWeight.w600),
                                 onChanged: (String text) {
                                   setState(() {
                                     _isContent = text.length > 0;
@@ -329,14 +341,15 @@ class _AddPostState extends State<AddPost> {
                           ],
                         )
                     ),
-                    SizedBox(height: 14,),
+                    SizedBox(height: 7,),
                     ElevatedButton(
                         child: const Text(
                           '기록 인화하기',
                           style: TextStyle(
+                              fontFamily: 'gangwon',
                               color: Color(0xFF72614E),
                               fontWeight: FontWeight.w600,
-                              fontSize: 17),
+                              fontSize: 22),
                         ),
                         style: ElevatedButton.styleFrom(
                           primary:  Color(0xFFE3CFB8),
@@ -363,26 +376,29 @@ class _AddPostState extends State<AddPost> {
                                   backgroundColor: Color(0xFfF8ECE2),
                                   title: Text('알림',
                                     style: TextStyle(
+                                        fontFamily: 'gangwon',
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 19,
+                                        fontSize: 21,
                                         //color: Color(0xFF746553),
                                         color: Color(0xFF3C3731)
 
                                     ),),
-                                  content: Text('기록을 남기려면 제목, 사진, 내용을 모두 기록ㅁ해주셔야 해유~',
+                                  content: Text('기록을 남기려면 제목, 사진, 내용을 모두 기록해주셔야 해유~',
                                       style: TextStyle(
+                                          fontFamily: 'gangwon',
                                           fontWeight: FontWeight.w500,
                                           color: Color(0xFF6B5F51),
-                                          fontSize: 17
+                                          fontSize: 21
 
                                       ),),
                                   actions: [
                                     TextButton(
                                       child: Text('OK',
                                           style: TextStyle(
+                                              fontFamily: 'gangwon',
                                               fontWeight: FontWeight.w600,
                                               color: Color(0xFF746553),
-                                              fontSize: 16
+                                              fontSize: 22
 
                                           ),),
                                       onPressed: () {

@@ -96,7 +96,8 @@ class _LoginPageState extends State<LoginPage> {
                     '로그인',
                     style: TextStyle(
                         color: Color(0xFF60544B),
-                      fontSize: 18,
+                      fontFamily: 'gangwon',
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -132,17 +133,19 @@ class _LoginPageState extends State<LoginPage> {
                             backgroundColor: Color(0xFfF8ECE2),
                             title: Text('알림',
                               style: TextStyle(
+                                  fontFamily: 'gangwon',
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 19,
+                                  fontSize: 22,
                                   //color: Color(0xFF746553),
                                   color: Color(0xFF3C3731)
 
                               ),),
                             content: Text('아이디 혹은 비밀번호가 잘못 입력된 것 같아요. 다시 입력해 주세요!',
                               style: TextStyle(
+                                  fontFamily: 'gangwon',
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xFF6B5F51),
-                                  fontSize: 17
+                                  fontSize: 21
 
                               ),),
                             actions: [
@@ -151,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         color: Color(0xFF746553),
-                                        fontSize: 16
+                                        fontSize: 18
 
                                     ),),
                                 onPressed: () {
@@ -173,15 +176,25 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('계정이 없으신가요?   '),
+                    const Text('계정이 없으신가요?  ',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          fontFamily: 'gangwon',
+                          //color: Color(0xFF746553),
+                          color: Colors.black
+
+                      ),),
                     TextButton(
                       child: const Text('회원가입',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold, // Set the desired font weight here
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'gangwon',
+                          fontSize: 16,// Set the desired font weight here
                         ),
                       ),
                       style: TextButton.styleFrom(
-                          primary: Color(0xFFB59884),
+                          primary: Color(0xFF705738),
                       ),
                       onPressed: () {
                         Navigator.push( context, MaterialPageRoute(
