@@ -84,7 +84,8 @@ class _FavoritePageState extends State<FavoritePage> {
               padding:  EdgeInsets.fromLTRB(0.0, 0.0, 50.0, 0.0),
               child:  Text("기억에 남는 순간",
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 23,
+                    fontFamily: 'gangwon',
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF72614E) ),),
             ),
@@ -162,6 +163,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                   },
                                   icon:  yearCollection.get('favorite')==true?Icon(Icons.star):Icon(Icons.star_border_outlined),
                                   iconSize: 28,
+                                  color: Color(0xFF72614E),
                                 ),
                               ),
                               Padding(
@@ -169,8 +171,10 @@ class _FavoritePageState extends State<FavoritePage> {
                                 child: Text(
                                   yearCollection.get('Title').toString(),
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 20,
+                                    fontFamily: 'gangwon',
+                                    color: Color(0xFF72614E),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 22,
                                   ),
                                 ),
                               ),
@@ -179,7 +183,7 @@ class _FavoritePageState extends State<FavoritePage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 10),
                         child: Stack(
                             children:[
                               InkWell(
@@ -196,7 +200,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                     yearCollection.get('IMAGE'),
                                     height: 250.0,
                                     width: 370.0,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.fitWidth,
                                   ),
                                 ),
                               ),
@@ -205,8 +209,9 @@ class _FavoritePageState extends State<FavoritePage> {
                                 child: Text(
                                   yearCollection.get('year').toString()+ '.' + yearCollection.get('month').toString().padLeft(2, '0') + '.' + yearCollection.get('day').toString().padLeft(2, '0'),
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: 'gangwon',
+                                    fontSize: 21,
                                     color: Colors.black,
                                   ),
                                 ),

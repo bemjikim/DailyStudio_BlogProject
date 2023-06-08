@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dailystudio_blog_project/archive/archive_main.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,8 @@ class SearchPageState extends State<SearchPage> {
                 child: const Text(
                   '검색',
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 23,
+                      fontFamily: 'gangwon',
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF72614E) ),
                 ),
@@ -122,13 +124,15 @@ class SearchPageState extends State<SearchPage> {
                         child: TextField(
                             controller: _searchController,
                             autofocus: true,
+                            style: TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                           ),
                         ),
                       ),
                       IconButton(
                           icon: Icon(Icons.search,
-                              color: Color(0xFF72614E)),
+                              color: Color(0xFF72614E),
+                          size: 30,),
                           onPressed:()async{
                             setState(() {
                               search = _searchController.text;
@@ -197,7 +201,12 @@ class SearchPageState extends State<SearchPage> {
         final yearCollections = snapshot.data?.docs ?? [];
         if (yearCollections.length == 0) {
           return Center(
-            child: Text("There is no data"),
+            child: Text("There is no data",
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: 'gangwon',
+              fontWeight: FontWeight.w400,
+            ),),
           );
         }
 
@@ -349,14 +358,20 @@ class SearchPageState extends State<SearchPage> {
                                               icon: productSnapshot['favorite'] == true
                                                   ? Icon(Icons.star)
                                                   : Icon(Icons.star_border_outlined),
-                                              iconSize: 20,
+                                              iconSize: 28,
+                                              color: Color(0xFF72614E),
                                             ),
                                           ),
-                                          Text(
-                                            productSnapshot['Title'].toString(),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 20,
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 8, left: 8),
+                                            child: Text(
+                                              productSnapshot['Title'].toString(),
+                                              style: TextStyle(
+                                                fontFamily: 'gangwon',
+                                                color: Color(0xFF72614E),
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 22,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -364,7 +379,7 @@ class SearchPageState extends State<SearchPage> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(0.0, 11, 0, 0),
                                     child: Stack(children: [
                                       InkWell(
                                         onTap: () {
@@ -372,15 +387,18 @@ class SearchPageState extends State<SearchPage> {
                                             return ArchiveDetail(detailed: productSnapshot.id + "/" + productSnapshot['year'].toString() + "/" + productSnapshot['month'].toString() + "/" + productSnapshot['day'].toString());
                                           }));
                                         },
-                                        child: Image.network(
-                                          productSnapshot['IMAGE'],
-                                          height: 200.0,
-                                          width: 350.0,
-                                          fit: BoxFit.fill,
+                                        child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                          child: Image.network(
+                                            productSnapshot['IMAGE'],
+                                            height: 250.0,
+                                            width: 370.0,
+                                            fit: BoxFit.fitWidth,
+                                          ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(20.0, 10, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(17.0, 11, 0, 0),
                                         child: Text(
                                           productSnapshot['year'].toString() +
                                               '.' +
@@ -389,7 +407,7 @@ class SearchPageState extends State<SearchPage> {
                                               productSnapshot['day'].toString().padLeft(2, '0'),
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20,
+                                            fontSize: 18,
                                           ),
                                         ),
                                       ),

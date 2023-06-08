@@ -63,9 +63,10 @@ class _HomePageState extends State<HomePage> {
               padding:  EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
               child:  Text("Daily Studio",
                 style: TextStyle(
+                    fontFamily: 'gangwon',
                     color: Color(0xFF443C34),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 24),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30),
               ),
             ),
           ),
@@ -84,19 +85,20 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 406,),
+                  SizedBox(height: 420,),
                   Container(
                     alignment: Alignment.center,
                     child: ElevatedButton(
                       child: const Text(
                         '사진 찍으러 왔어요! (기록 남기기)',
                         style: TextStyle(
-                            color: Color(0xFF443C34),
+                            fontFamily: 'gangwon',
+                            color: Color(0xFF72614E),
                             fontWeight: FontWeight.w600,
-                            fontSize: 16),
+                            fontSize: 20),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFE3CFB8),
+                        primary:  Color(0xFFF0E7DC),
                         minimumSize: const Size(360, 46),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
@@ -111,19 +113,20 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 10),
                   Container(
                     alignment: Alignment.center,
                     child: ElevatedButton(
                       child: const Text(
                         '사진 찾으러 왔어요! (기록 보관소)',
                         style: TextStyle(
-                            color: Color(0xFF443C34),
+                            fontFamily: 'gangwon',
+                            color: Color(0xFF72614E),
                             fontWeight: FontWeight.w600,
-                            fontSize: 16),
+                            fontSize: 20),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFE3CFB8),
+                        primary:  Color(0xFFF0E7DC),
                         minimumSize: const Size(360, 46),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here

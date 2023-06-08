@@ -62,11 +62,40 @@ class _AddPostState extends State<AddPost> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('알림'),
-          content: Text('작성하고 계시는 글이 삭제됩니다\n괜찮으시겠습니까?'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+
+          backgroundColor: Color(0xFfF8ECE2),
+
+          title: Text('알림',
+            style: TextStyle(
+                fontFamily: 'gangwon',
+                fontWeight: FontWeight.w600,
+              fontSize: 21,
+                  //color: Color(0xFF746553),
+                color: Color(0xFF3C3731)
+
+            ),),
+          content: Text('작성하고 있는 글이 저장되지않네..\n그래도 괜찮으신가?',
+            style: TextStyle(
+                fontFamily: 'gangwon',
+              fontWeight: FontWeight.w500,
+                color: Color(0xFF6B5F51),
+                fontSize: 20
+
+            ),),
+
           actions: [
             TextButton(
-              child: Text('아니요'),
+              child: Text('아니요',
+                style: TextStyle(
+                    fontFamily: 'gangwon',
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF746553),
+                  fontSize: 21
+
+                ),),
               onPressed: () {
                 setState(() {
                   Navigator.pop(context);
@@ -74,7 +103,14 @@ class _AddPostState extends State<AddPost> {
               },
             ),
             TextButton(
-              child: Text('예'),
+              child: Text('예',
+                style: TextStyle(
+                    fontFamily: 'gangwon',
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B5F51),
+                    fontSize: 21
+
+                ),),
               onPressed: () {
                 setState(() {
                   Navigator.pop(context);
@@ -143,9 +179,10 @@ class _AddPostState extends State<AddPost> {
                 child: const Text(
                   '기록 남기기',
                     style: TextStyle(
+                        fontFamily: 'gangwon',
                         color: Color(0xFF72614E),
                         fontWeight: FontWeight.w600,
-                        fontSize: 20),
+                        fontSize: 23),
                 ),
               ),
             ),
@@ -159,7 +196,7 @@ class _AddPostState extends State<AddPost> {
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              reverse: true,
+              reverse: false,
               child: Container(
                 child: Column(
                   children: <Widget>[
@@ -191,8 +228,9 @@ class _AddPostState extends State<AddPost> {
                           Text(
                             "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
                             style: TextStyle(
-                              fontSize: 18, // Adjust the font size as desired
-                              fontWeight: FontWeight.w500,
+                              fontSize: 22,
+                              fontFamily: 'gangwon',// Adjust the font size as desired
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -204,7 +242,7 @@ class _AddPostState extends State<AddPost> {
                       _isLoading ? new CircularProgressIndicator() : null,
                     ),
                     Container(
-                        height: 426,
+                        //height: 426,
                         width: 370,
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -223,7 +261,10 @@ class _AddPostState extends State<AddPost> {
                                 controller: _title,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 18.0,
+                                  fontSize: 21.0,
+                                    fontFamily: 'gangwon',
+                                    fontWeight: FontWeight.w600
+
 
                                 ),
                                 onChanged: (String text) {
@@ -243,35 +284,43 @@ class _AddPostState extends State<AddPost> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 50,),
+                            SizedBox(height: 4,),
                             InkWell(
                               child: _image == null
-                                  ? Image.asset(
-                                "assets/camera.png",
-                                height: 40.0,
-                                width: 100.0,
-
-                              )
+                                  ?
+                               Column(
+                                 children: [
+                                   SizedBox(height: 60,),
+                                   Image.asset(
+                                    "assets/camera.png",
+                                    height: 45.0,
+                                    width: 105.0,
+                                    ),
+                                   SizedBox(height: 45,),
+                                 ],
+                               )
                                   : Image.file(
                                 File(_image!.path),
-                                height: 100.0,
-                                width: 320.0,
+
+                                width: 340.0,
                                 fit: BoxFit.fill,
                               ),
                               onTap: () {
                                 getImage();
                               },
                             ),
-                            SizedBox(height: 50,),
+                            SizedBox(height: 3,),
 
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: TextField(
                                 keyboardType: TextInputType.multiline,
-                                maxLines: null,
+                                maxLines: 9,
                                 controller: _content,
                                 style: TextStyle(color: Colors.black,
-                                    fontSize: 18.0),
+                                    fontSize: 21.0,
+                                    fontFamily: 'gangwon',
+                                    fontWeight: FontWeight.w600),
                                 onChanged: (String text) {
                                   setState(() {
                                     _isContent = text.length > 0;
@@ -292,14 +341,15 @@ class _AddPostState extends State<AddPost> {
                           ],
                         )
                     ),
-                    SizedBox(height: 14,),
+                    SizedBox(height: 7,),
                     ElevatedButton(
                         child: const Text(
                           '기록 인화하기',
                           style: TextStyle(
+                              fontFamily: 'gangwon',
                               color: Color(0xFF72614E),
                               fontWeight: FontWeight.w600,
-                              fontSize: 17),
+                              fontSize: 22),
                         ),
                         style: ElevatedButton.styleFrom(
                           primary:  Color(0xFFE3CFB8),
@@ -320,11 +370,37 @@ class _AddPostState extends State<AddPost> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('알림'),
-                                  content: Text('제목, 사진, 내용을 기입해주세요'),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  ),
+                                  backgroundColor: Color(0xFfF8ECE2),
+                                  title: Text('알림',
+                                    style: TextStyle(
+                                        fontFamily: 'gangwon',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 21,
+                                        //color: Color(0xFF746553),
+                                        color: Color(0xFF3C3731)
+
+                                    ),),
+                                  content: Text('기록을 남기려면 제목, 사진, 내용을 모두 기록해주셔야 해유~',
+                                      style: TextStyle(
+                                          fontFamily: 'gangwon',
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF6B5F51),
+                                          fontSize: 21
+
+                                      ),),
                                   actions: [
                                     TextButton(
-                                      child: Text('OK'),
+                                      child: Text('OK',
+                                          style: TextStyle(
+                                              fontFamily: 'gangwon',
+                                              fontWeight: FontWeight.w600,
+                                              color: Color(0xFF746553),
+                                              fontSize: 22
+
+                                          ),),
                                       onPressed: () {
                                         setState(() {
                                           Navigator.pop(context);
