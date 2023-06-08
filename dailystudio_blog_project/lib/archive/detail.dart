@@ -569,7 +569,7 @@ class _ArchiveDetailState extends State<ArchiveDetail> {
                   ),
                 ),
                 if( _pageState == DetailPageState.normal)
-                  SizedBox(height: 150,)
+                  SizedBox(height: 160,)
               ],
             ),
           ),
