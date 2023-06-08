@@ -256,7 +256,7 @@ class _ArchiveMainState extends State<ArchiveMain> {
                                                 productSnapshot['IMAGE'],
                                                 height: 102.0,
                                                 width: 102.0,
-                                                fit: BoxFit.fitWidth,
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
