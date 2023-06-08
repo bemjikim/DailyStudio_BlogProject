@@ -138,6 +138,13 @@ class SearchPageState extends State<SearchPage> {
                     ],
                   ),
                 ),
+                  if(search.length == 0)
+                    Expanded
+                      (
+                        child:Text("Please Search"),
+
+                    ),
+                  if(search.length != 0)
                   Expanded(
                     child:showBody()
                   ),
@@ -185,7 +192,7 @@ class SearchPageState extends State<SearchPage> {
     final postRef = FirebaseFirestore.instance.collection('user').doc(cn!.name);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: postRef.collection('post').snapshots(),
+      stream: postRef.collection('post').orderBy('make').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -210,7 +217,7 @@ class SearchPageState extends State<SearchPage> {
 
             // Extract the names of subcollections
             return StreamBuilder<QuerySnapshot>(
-              stream: yearCollection.reference.collection('month').snapshots(),
+              stream: yearCollection.reference.collection('month').orderBy('make').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
@@ -221,9 +228,7 @@ class SearchPageState extends State<SearchPage> {
                 }
 
                 final monthDocs = snapshot.data?.docs ?? [];
-                if (monthDocs.isEmpty) {
-                  return Text("There is no data");
-                }
+
 
                 return ListView.builder(
                   // 스크롤 동작 비활성화
@@ -254,12 +259,6 @@ class SearchPageState extends State<SearchPage> {
                         print(productSnapshots.length);
                         final filteredSnapshots = productSnapshots.where((snapshot) => snapshot['tag'].toString().contains(_searchController.text)).toList();
                         print(filteredSnapshots.length);
-                        if(_searchController.text.length == 0 || filteredSnapshots.isEmpty)
-                          {
-                            return Center(
-                              child: Text("There is no data."),
-                            );
-                          }
                         return ListView.builder(
                           // 스크롤 동작 비활성화
                           shrinkWrap: true,

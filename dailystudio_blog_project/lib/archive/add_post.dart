@@ -390,12 +390,31 @@ class _AddPostState extends State<AddPost> {
     final postYear = postRef.collection('post').doc(date.year.toString());
     final postMonth = postYear.collection('month').doc(date.month.toString());
     final posted = postMonth.collection('posted').doc(DateTime.now().toString());
+    String month = "";
+    String day = "";
+    if(date.month < 10)
+      {
+        month = "0"+date.month.toString();
+      }
+    else
+      {
+        month = date.month.toString();
+      }
+    if(date.day < 10)
+    {
+      day = "0"+date.day.toString();
+    }
+    else
+      {
+        day = date.day.toString();
+      }
+
     if(_image == null){
       postYear.set({
-        'make' : 1,
+        'make' : date.year,
       });
       postMonth.set({
-        'make' : 1,
+        'make' : date.month,
       });
       var downloadUrl =
           "https://firebasestorage.googleapis.com/v0/b/dailyblogproject-e323c.appspot.com/o/post%2F%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.png?alt=media&token=fdbd13ff-bec6-4615-ae91-20410ff83a8a";
@@ -405,10 +424,10 @@ class _AddPostState extends State<AddPost> {
         'Content': content,
         'favorite': false,
         'year' : date.year,
-        'month' : date.month,
-        'day' : date.day,
+        'month' : int.parse(month),
+        'day' : int.parse(day),
         'tag': scannedText.toLowerCase(),
-        'wholeday' : date.year.toString() +  date.month.toString()  + date.day.toString(),
+        'wholeday' : date.year.toString() + month + day,
         'createdTime': FieldValue.serverTimestamp(),
         'modifiedTime': FieldValue.serverTimestamp(),
       }).then((onValue) {
@@ -426,10 +445,10 @@ class _AddPostState extends State<AddPost> {
         // 업로드 완료되면 데이터의 주소를 얻을수 있음, future object
         var downloadUrl = await task.ref.getDownloadURL();
         postYear.set({
-          'make' : 1,
+          'make' : date.year,
         });
         postMonth.set({
-          'make' : 1,
+          'make' : date.month,
         });
         // post collection 만들고, 하위에 문서를 만든다
         posted.set({
@@ -439,10 +458,10 @@ class _AddPostState extends State<AddPost> {
           'likes': 0,
           'favorite': false,
           'year' : date.year,
-          'month' : date.month,
-          'day' : date.day,
+          'month' : int.parse(month),
+          'day' : int.parse(day),
           'tag': scannedText.toLowerCase(),
-          'wholeday' : date.year.toString()  + date.month.toString()  + date.day.toString(),
+          'wholeday' : date.year.toString() + month + day,
           'createdTime': FieldValue.serverTimestamp(),
           'modifiedTime': FieldValue.serverTimestamp(),
         }).then((onValue) {

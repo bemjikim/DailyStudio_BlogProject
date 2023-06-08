@@ -132,7 +132,7 @@ class _ArchiveMainState extends State<ArchiveMain> {
 
 
             child: StreamBuilder<QuerySnapshot>(
-              stream: postRef.collection('post').snapshots(),
+              stream: postRef.collection('post').orderBy('make').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
@@ -169,7 +169,7 @@ class _ArchiveMainState extends State<ArchiveMain> {
                               ),),
                           ),
                         StreamBuilder<QuerySnapshot>(
-                          stream: yearCollection.reference.collection('month').snapshots(),
+                          stream: yearCollection.reference.collection('month').orderBy('make').snapshots(),
                           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
