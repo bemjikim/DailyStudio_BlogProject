@@ -84,9 +84,10 @@ class _SettingPageState extends State<SettingPage> {
               child: const Text(
                 '설정',
                 style: TextStyle(
+                    fontFamily: 'gangwon',
                     color: Color(0xFF72614E),
                     fontWeight: FontWeight.w600,
-                    fontSize: 20),
+                    fontSize: 23),
               ),
             ),
           ),
@@ -122,7 +123,10 @@ class _SettingPageState extends State<SettingPage> {
                           Text(
                             "계정",
                             style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w500,
+                              fontFamily: 'gangwon',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Color(0xFF72614E),
                             ),
                           ),
                           SizedBox(width: 305),
@@ -137,7 +141,8 @@ class _SettingPageState extends State<SettingPage> {
                                     }
                                 ));
                               },
-                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                              icon: Icon(Icons.arrow_forward_ios_rounded,
+                                  color: Color(0xFF72614E)),
                             ),
                           ),
                         ],
@@ -154,7 +159,10 @@ class _SettingPageState extends State<SettingPage> {
                           Text(
                             "라이트 모드",
                             style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w500,
+                              fontFamily: 'gangwon',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Color(0xFF72614E),
                             ),
                           ),
                           SizedBox(width: 260),
@@ -186,7 +194,10 @@ class _SettingPageState extends State<SettingPage> {
                           Text(
                             "글꼴 변경하기",
                             style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w500,
+                              fontFamily: 'gangwon',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Color(0xFF72614E),
                             ),
                           ),
                           SizedBox(width: 236),
@@ -195,7 +206,8 @@ class _SettingPageState extends State<SettingPage> {
                             height: 40,
                             child: IconButton(
                               onPressed: (){},
-                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                              icon: Icon(Icons.arrow_forward_ios_rounded,
+                                  color: Color(0xFF72614E)),
                             ),
                           ),
                         ],
@@ -212,7 +224,10 @@ class _SettingPageState extends State<SettingPage> {
                           Text(
                             "문의하기",
                             style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w500,
+                              fontFamily: 'gangwon',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Color(0xFF72614E),
                             ),
                           ),
                           SizedBox(width: 272),
@@ -225,11 +240,56 @@ class _SettingPageState extends State<SettingPage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('개발자 INFO'),
-                                      content: Text('21900104@handong.ac.kr'),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18.0),
+                                      ),
+                                      backgroundColor: Color(0xFfF8ECE2),
+                                      title: Text('개발자 INFO',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'gangwon',
+                                            fontSize: 21,
+                                            //color: Color(0xFF746553),
+                                            color: Color(0xFF3C3731)
+
+                                        ),),
+                                      content: SizedBox(
+                                        height: 48,
+                                        child: Column(
+
+                                          children: [
+
+                                            Text('21900104@handong.ac.kr',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize:20,
+                                                  fontFamily: 'gangwon',
+                                                  //color: Color(0xFF746553),
+                                                  color: Color(0xFF3C3731)
+
+                                              ),),
+                                            SizedBox(height: 2,),
+                                            Text('22000405@handong.ac.kr',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20,
+                                                  fontFamily: 'gangwon',
+                                                  //color: Color(0xFF746553),
+                                                  color: Color(0xFF3C3731)
+
+                                              ),),
+                                          ],
+                                        ),
+                                      ),
                                       actions: [
                                         TextButton(
-                                          child: Text('OK'),
+                                          child: Text('OK',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(0xFF746553),
+                                                fontSize: 16
+
+                                            ),),
                                           onPressed: () {
                                             setState(() {
                                               Navigator.pop(context);
@@ -241,7 +301,8 @@ class _SettingPageState extends State<SettingPage> {
                                   },
                                 );
                               },
-                              icon: Icon(Icons.arrow_forward_ios_rounded),
+                              icon: Icon(Icons.arrow_forward_ios_rounded,
+                                  color: Color(0xFF72614E)),
                             ),
                           ),
                         ],
@@ -260,7 +321,10 @@ class _SettingPageState extends State<SettingPage> {
                           Text(
                             "버전",
                             style: TextStyle(
-                              fontSize: 17,
+                              fontFamily: 'gangwon',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Color(0xFF72614E),
                             ),
                           ),
                           SizedBox(width: 296),
@@ -268,7 +332,10 @@ class _SettingPageState extends State<SettingPage> {
                             child: Text(
                                 "1.0.0",
                               style: TextStyle(
-                                fontSize: 17
+                                  fontFamily: 'gangwon',
+                                  color: Color(0xFF72614E),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 22
                               ),
                             ),
                           ),
@@ -284,12 +351,13 @@ class _SettingPageState extends State<SettingPage> {
                       child: Text(
                         "로그아웃", // 인덱스 0에 해당하는 요소가 없을 경우 빈 문자열 반환
                         style: TextStyle(
+                            fontFamily: 'gangwon',
                             color: Color(0xFF72614E),
                             fontWeight: FontWeight.w600,
-                            fontSize: 17),
+                            fontSize: 21),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary:  Color(0xFFE3CFB8),
+                        primary:  Color(0xFFEFE3D6),
                         minimumSize: const Size(370, 46),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here

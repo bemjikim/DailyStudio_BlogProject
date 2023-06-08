@@ -99,9 +99,10 @@ class _ArchiveMainState extends State<ArchiveMain> {
                 child: const Text(
                   '기록 보관소',
                   style: TextStyle(
+                      fontFamily: 'gangwon',
                       color: Color(0xFF72614E),
                       fontWeight: FontWeight.w600,
-                      fontSize: 20),
+                      fontSize: 23),
                 ),
               ),
             ),
@@ -110,7 +111,8 @@ class _ArchiveMainState extends State<ArchiveMain> {
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
                 child: IconButton(
                   icon: Icon(Icons.search,
-                      color: Color(0xFF72614E)),
+                      color: Color(0xFF72614E),
+                  size: 29,),
                   onPressed: () {
                     Navigator.push( context, MaterialPageRoute(
                         builder: (context){
@@ -147,7 +149,13 @@ class _ArchiveMainState extends State<ArchiveMain> {
                 {
                   return Center(
                     child: Text(
-                        "There is no data"
+                        "There is no data",
+                      style: TextStyle(
+                          fontFamily: 'gangwon',
+                          color: Color(0xFF72614E),
+                          fontWeight: FontWeight.w200,
+                          fontSize: 20),
+
                     ),
                   );
                 }
@@ -163,9 +171,10 @@ class _ArchiveMainState extends State<ArchiveMain> {
                           ListTile(
                             title: Text(yearCollection.id + "년",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 22,
+                                fontFamily: 'gangwon',
                                 color: Color(0xFF72614E),// Adjust the value as per your preference
-                                fontWeight: FontWeight.w500, // You can also adjust the font weight if needed
+                                fontWeight: FontWeight.w600, // You can also adjust the font weight if needed
                               ),),
                           ),
                         StreamBuilder<QuerySnapshot>(
@@ -182,13 +191,18 @@ class _ArchiveMainState extends State<ArchiveMain> {
                             final monthDocs = snapshot.data?.docs ?? [];
                             if(monthDocs.isEmpty)
                             {
-                              return Text("There is the no data");
+                              return Text("There is the no data",
+                                style: TextStyle(
+                                    fontFamily: 'gangwon',
+                                    color: Color(0xFF72614E),
+                                    fontWeight: FontWeight.w200,
+                                    fontSize: 20),);
                             }
                             return GridView.builder(
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 crossAxisSpacing: 1, // Adjust the spacing value as per your preference
-                                mainAxisSpacing: 2, // Adjust the spacing value as per your preference
+                                mainAxisSpacing: 1, // Adjust the spacing value as per your preference
                               ),
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -240,19 +254,20 @@ class _ArchiveMainState extends State<ArchiveMain> {
                                               borderRadius: BorderRadius.circular(10),
                                               child: Image.network(
                                                 productSnapshot['IMAGE'],
-                                                height: 100.0,
-                                                width: 100.0,
-                                                fit: BoxFit.fill,
+                                                height: 102.0,
+                                                width: 102.0,
+                                                fit: BoxFit.fitWidth,
                                               ),
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.only(top: 4.0, bottom: 9),
                                             child: Text(month + "월",
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: 18,
+                                                fontFamily: 'gangwon',
                                                 color: Color(0xFF72614E),// Adjust the value as per your preference
-                                                fontWeight: FontWeight.w500, // You can also adjust the font weight if needed
+                                                fontWeight: FontWeight.w600, // You can also adjust the font weight if needed
                                               ),),
                                           ),
                                         ],
